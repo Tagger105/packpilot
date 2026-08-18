@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>PackPilot</title>
+<style>
+/* ============ Grundvariablen (Light Mode) ============ */
+:root {
+  --color-bg: #F2F2F7;
+  --color-card: #FFFFFF;
+  --color-text: #000000;
+  --color-text-secondary: #6E6E73;
+  --color-separator: #E5E5EA;
+  --color-accent: #007AFF;
+  --color-header-bg: #F2F2F7;
+  --color-tabbar-bg: rgba(249, 249, 249, 0.94);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #000000;
+    --color-card: #1C1C1E;
+    --color-text: #FFFFFF;
+    --color-text-secondary: #98989D;
+    --color-separator: #38383A;
+    --color-accent: #0A84FF;
+    --color-header-bg: #000000;
+    --color-tabbar-bg: rgba(28, 28, 30, 0.94);
+  }
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #d9d9de;
+  font-family: -apple-system, "SF Pro Text", "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  html, body {
+    background: #000000;
+  }
+}
+
+#app {
+  max-width: 430px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background: var(--color-bg);
+  position: relative;
+  overflow-x: hidden;
+  box-shadow: 0 0 40px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 431px) {
+  html, body {
+    padding: 24px 0;
+  }
+}
+
+.app-header {
+  background: var(--color-header-bg);
+  padding: 12px 16px 8px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.app-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.app-content {
+  flex: 1;
+  padding: 8px 16px 90px 16px;
+}
+
+.tab-page.hidden {
+  display: none;
+}
+
+.section-header {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  margin: 20px 4px 6px 4px;
+  letter-spacing: 0.3px;
+}
+
+.grouped-list {
+  background: var(--color-card);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--color-separator);
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.list-row:last-child {
+  border-bottom: none;
+}
+
+.list-row-title {
+  font-size: 16px;
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.list-row-sub {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+.list-row-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.chevron {
+  color: var(--color-text-secondary);
+  font-size: 20px;
+  margin-left: 8px;
+}
+
+.tag-icon {
+  font-size: 18px;
+  margin-left: 8px;
+}
+
+.list-card {
+  background: var(--color-card);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.list-card-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.list-card-sub {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+  margin-bottom: 10px;
+}
+
+.progress-bar {
+  background: var(--color-separator);
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  background: var(--color-accent);
+  height: 100%;
+  border-radius: 3px;
+}
+
+.list-card-footer {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-top: 6px;
+}
+
+.quick-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.quick-card {
+  flex: 1;
+  background: var(--color-card);
+  border: none;
+  border-radius: 14px;
+  padding: 16px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.quick-icon {
+  font-size: 28px;
+}
+
+.quick-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.search-bar {
+  margin: 4px 0 12px 0;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: none;
+  background: var(--color-card);
+  font-size: 16px;
+  color: var(--color-text);
+}
+
+.search-bar input::placeholder {
+  color: var(--color-text-secondary);
+}
+
+.tab-bar {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  background: var(--color-tabbar-bg);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--color-separator);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  z-index: 20;
+}
+
+.tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 0 6px 0;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+}
+
+.tab-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.tab-label {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.tab-btn.active {
+  color: var(--color-accent);
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <header class="app-header">
+    <h1 id="pageTitle">PackPilot</h1>
+  </header>
+
+  <main class="app-content">
+
+    <section class="tab-page" id="tab-start">
+      <div class="quick-actions">
+        <button class="quick-card" id="btnNeuePackliste">
+          <span class="quick-icon">🧳</span>
+          <span class="quick-label">Neue Packliste</span>
+        </button>
+        <button class="quick-card" id="btnArtikelVerwalten">
+          <span class="quick-icon">📦</span>
+          <span class="quick-label">Artikel verwalten</span>
+        </button>
+      </div>
+
+      <div class="section-header">Deine letzten Packlisten</div>
+      <div class="grouped-list">
+        <div class="list-card">
+          <div class="list-card-title">Urlaub Spanien</div>
+          <div class="list-card-sub">Meer, Standard Sommer</div>
+          <div class="progress-bar"><div class="progress-fill" style="width: 65%;"></div></div>
+          <div class="list-card-footer">65 % gepackt</div>
+        </div>
+        <div class="list-card">
+          <div class="list-card-title">Skiurlaub Österreich</div>
+          <div class="list-card-sub">Standard Winter, Ski Fahren</div>
+          <div class="progress-bar"><div class="progress-fill" style="width: 20%;"></div></div>
+          <div class="list-card-footer">20 % gepackt</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-page hidden" id="tab-packlisten">
+      <div class="grouped-list">
+        <div class="list-row">
+          <div class="list-row-main">
+            <div class="list-row-title">Urlaub Spanien</div>
+            <div class="list-row-sub">Meer, Standard Sommer · 24 Artikel</div>
+          </div>
+          <div class="chevron">›</div>
+        </div>
+        <div class="list-row">
+          <div class="list-row-main">
+            <div class="list-row-title">Skiurlaub Österreich</div>
+            <div class="list-row-sub">Standard Winter, Ski Fahren · 18 Artikel</div>
+          </div>
+          <div class="chevron">›</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-page hidden" id="tab-artikel">
+      <div class="search-bar">
+        <input type="text" placeholder="Artikel suchen">
+      </div>
+
+      <div class="section-header">Kleidung</div>
+      <div class="grouped-list">
+        <div class="list-row">
+          <div class="list-row-main">
+            <div class="list-row-title">Socken</div>
+            <div class="list-row-sub">20 g · Kleiderschrank</div>
+          </div>
+          <span class="tag-icon" title="Lagerort">🏠</span>
+        </div>
+        <div class="list-row">
+          <div class="list-row-main">
+            <div class="list-row-title">T-Shirt</div>
+            <div class="list-row-sub">150 g · Kleiderschrank</div>
+          </div>
+          <span class="tag-icon" title="Lagerort">🏠</span>
+        </div>
+      </div>
+
+      <div class="section-header">Equipment</div>
+      <div class="grouped-list">
+        <div class="list-row">
+          <div class="list-row-main">
+            <div class="list-row-title">Ladekabel</div>
+            <div class="list-row-sub">50 g · Büro</div>
+          </div>
+          <span class="tag-icon" title="Lagerort">💼</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-page hidden" id="tab-einstellungen">
+      <div class="section-header">Stammdaten</div>
+      <div class="grouped-list">
+        <div class="list-row"><div class="list-row-title">Kategorien</div><div class="chevron">›</div></div>
+        <div class="list-row"><div class="list-row-title">Urlaubstypen</div><div class="chevron">›</div></div>
+        <div class="list-row"><div class="list-row-title">Lagerorte</div><div class="chevron">›</div></div>
+        <div class="list-row"><div class="list-row-title">Gepäckstücke</div><div class="chevron">›</div></div>
+      </div>
+
+      <div class="section-header">Daten &amp; Sicherung</div>
+      <div class="grouped-list">
+        <div class="list-row"><div class="list-row-title">Backup erstellen</div><div class="chevron">›</div></div>
+        <div class="list-row"><div class="list-row-title">Backup wiederherstellen</div><div class="chevron">›</div></div>
+        <div class="list-row"><div class="list-row-title">Artikel aus CSV importieren</div><div class="chevron">›</div></div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-tab="tab-start" data-title="PackPilot">
+      <span class="tab-icon">🏠</span>
+      <span class="tab-label">Start</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-packlisten" data-title="Packlisten">
+      <span class="tab-icon">🧳</span>
+      <span class="tab-label">Packlisten</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-artikel" data-title="Artikel">
+      <span class="tab-icon">📦</span>
+      <span class="tab-label">Artikel</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-einstellungen" data-title="Einstellungen">
+      <span class="tab-icon">⚙️</span>
+      <span class="tab-label">Einstellungen</span>
+    </button>
+  </nav>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const tabButtons = document.querySelectorAll(".tab-btn");
+  const pageTitle = document.getElementById("pageTitle");
+
+  tabButtons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      const targetId = btn.getAttribute("data-tab");
+      const targetTitle = btn.getAttribute("data-title");
+
+      document.querySelectorAll(".tab-page").forEach(function (page) {
+        page.classList.add("hidden");
+      });
+
+      document.getElementById(targetId).classList.remove("hidden");
+
+      tabButtons.forEach(function (b) {
+        b.classList.remove("active");
+      });
+      btn.classList.add("active");
+
+      pageTitle.textContent = targetTitle;
+
+      document.querySelector(".app-content").scrollTop = 0;
+    });
+  });
+
+  document.getElementById("btnNeuePackliste").addEventListener("click", function () {
+    document.querySelector('.tab-btn[data-tab="tab-packlisten"]').click();
+  });
+
+  document.getElementById("btnArtikelVerwalten").addEventListener("click", function () {
+    document.querySelector('.tab-btn[data-tab="tab-artikel"]').click();
+  });
+});
+</script>
+
+</body>
+</html>
