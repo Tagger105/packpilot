@@ -52,9 +52,7 @@ html, body {
 }
 
 @media (prefers-color-scheme: dark) {
-  html, body {
-    background: #000000;
-  }
+  html, body { background: #000000; }
 }
 
 body {
@@ -78,11 +76,7 @@ body {
 }
 
 @media (min-width: 431px) {
-  #app {
-    height: 92vh;
-    max-height: 900px;
-    border-radius: 24px;
-  }
+  #app { height: 92vh; max-height: 900px; border-radius: 24px; }
 }
 
 .app-header {
@@ -91,381 +85,168 @@ body {
   flex-shrink: 0;
 }
 
-.header-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+.header-row { display: flex; align-items: center; justify-content: space-between; }
 
-.app-header h1 {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--color-text);
-  margin: 0;
-}
+.app-header h1 { font-size: 28px; font-weight: 700; color: var(--color-text); margin: 0; }
 
 .header-action {
-  background: none;
-  border: none;
-  font-size: 26px;
-  color: var(--color-accent);
-  line-height: 1;
-  padding: 4px 6px;
-  display: none;
+  background: none; border: none; font-size: 26px; color: var(--color-accent);
+  line-height: 1; padding: 4px 6px; display: none;
 }
+.header-action.visible { display: block; }
 
-.header-action.visible {
-  display: block;
-}
+.app-content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 8px 16px 24px 16px; }
 
-.app-content {
-  flex: 1;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 8px 16px 24px 16px;
-}
-
-.tab-page.hidden {
-  display: none;
-}
+.tab-page.hidden { display: none; }
 
 .section-header {
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: var(--color-text-secondary);
-  margin: 20px 4px 6px 4px;
-  letter-spacing: 0.3px;
+  font-size: 13px; font-weight: 600; text-transform: uppercase;
+  color: var(--color-text-secondary); margin: 20px 4px 6px 4px; letter-spacing: 0.3px;
 }
 
-.grouped-list {
-  background: var(--color-card);
-  border-radius: 14px;
-  overflow: hidden;
-  margin-bottom: 4px;
-}
+.grouped-list { background: var(--color-card); border-radius: 14px; overflow: hidden; margin-bottom: 4px; }
 
 .list-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--color-separator);
-  min-height: 44px;
-  cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px; border-bottom: 1px solid var(--color-separator);
+  min-height: 44px; cursor: pointer;
 }
+.list-row:last-child { border-bottom: none; }
 
-.list-row:last-child {
-  border-bottom: none;
-}
+.list-row-title { font-size: 16px; color: var(--color-text); font-weight: 500; }
+.list-row-sub { font-size: 13px; color: var(--color-text-secondary); margin-top: 2px; }
+.list-row-main { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.chevron { color: var(--color-text-secondary); font-size: 20px; margin-left: 8px; flex-shrink: 0; }
+.row-more-btn { background: none; border: none; font-size: 18px; color: var(--color-text-secondary); padding: 4px 8px; flex-shrink: 0; }
 
-.list-row-title {
-  font-size: 16px;
-  color: var(--color-text);
-  font-weight: 500;
-}
+.empty-hint { text-align: center; color: var(--color-text-secondary); font-size: 14px; padding: 30px 10px; }
 
-.list-row-sub {
-  font-size: 13px;
-  color: var(--color-text-secondary);
-  margin-top: 2px;
-}
+.list-card { background: var(--color-card); border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; cursor: pointer; }
+.list-card-title { font-size: 17px; font-weight: 600; color: var(--color-text); }
+.list-card-sub { font-size: 13px; color: var(--color-text-secondary); margin-top: 2px; margin-bottom: 10px; }
+.progress-bar { background: var(--color-separator); height: 6px; border-radius: 3px; overflow: hidden; }
+.progress-fill { background: var(--color-accent); height: 100%; border-radius: 3px; }
+.list-card-footer { font-size: 12px; color: var(--color-text-secondary); margin-top: 6px; }
 
-.list-row-main {
-  display: flex;
-  flex-direction: column;
-}
-
-.chevron {
-  color: var(--color-text-secondary);
-  font-size: 20px;
-  margin-left: 8px;
-}
-
-.empty-hint {
-  text-align: center;
-  color: var(--color-text-secondary);
-  font-size: 14px;
-  padding: 30px 10px;
-}
-
-/* Lagerort-Badge (Initiale) */
-.badge {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  margin-left: 8px;
-  flex-shrink: 0;
-}
-
-.list-card {
-  background: var(--color-card);
-  border-radius: 14px;
-  padding: 14px 16px;
-  margin-bottom: 12px;
-}
-
-.list-card-title {
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--color-text);
-}
-
-.list-card-sub {
-  font-size: 13px;
-  color: var(--color-text-secondary);
-  margin-top: 2px;
-  margin-bottom: 10px;
-}
-
-.progress-bar {
-  background: var(--color-separator);
-  height: 6px;
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  background: var(--color-accent);
-  height: 100%;
-  border-radius: 3px;
-}
-
-.list-card-footer {
-  font-size: 12px;
-  color: var(--color-text-secondary);
-  margin-top: 6px;
-}
-
-.quick-actions {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-
+.quick-actions { display: flex; gap: 12px; margin-bottom: 8px; }
 .quick-card {
-  flex: 1;
-  background: var(--color-card);
-  border: none;
-  border-radius: 14px;
-  padding: 16px 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
+  flex: 1; background: var(--color-card); border: none; border-radius: 14px; padding: 16px 8px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;
 }
+.quick-icon { font-size: 28px; }
+.quick-label { font-size: 13px; font-weight: 500; color: var(--color-text); text-align: center; }
 
-.quick-icon {
-  font-size: 28px;
-}
-
-.quick-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-text);
-  text-align: center;
-}
-
-.search-bar {
-  margin: 4px 0 12px 0;
-}
-
+.search-bar { margin: 4px 0 12px 0; }
 .search-bar input {
-  width: 100%;
-  padding: 8px 12px;
-  border-radius: 10px;
-  border: none;
-  background: var(--color-card);
-  font-size: 16px;
-  color: var(--color-text);
+  width: 100%; padding: 8px 12px; border-radius: 10px; border: none;
+  background: var(--color-card); font-size: 16px; color: var(--color-text);
 }
-
-.search-bar input::placeholder {
-  color: var(--color-text-secondary);
-}
+.search-bar input::placeholder { color: var(--color-text-secondary); }
 
 .tab-bar {
-  flex-shrink: 0;
-  display: flex;
-  background: var(--color-tabbar-bg);
-  backdrop-filter: blur(20px);
-  border-top: 1px solid var(--color-separator);
+  flex-shrink: 0; display: flex; background: var(--color-tabbar-bg);
+  backdrop-filter: blur(20px); border-top: 1px solid var(--color-separator);
   padding-bottom: max(env(safe-area-inset-bottom, 0px), 6px);
 }
-
 .tab-btn {
-  flex: 1;
-  background: none;
-  border: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  padding: 8px 0 6px 0;
-  cursor: pointer;
-  color: var(--color-text-secondary);
+  flex: 1; background: none; border: none; display: flex; flex-direction: column;
+  align-items: center; gap: 2px; padding: 8px 0 6px 0; cursor: pointer; color: var(--color-text-secondary);
 }
-
-.tab-icon {
-  font-size: 22px;
-  line-height: 1;
-}
-
-.tab-label {
-  font-size: 11px;
-  font-weight: 500;
-}
-
-.tab-btn.active {
-  color: var(--color-accent);
-}
+.tab-icon { font-size: 22px; line-height: 1; }
+.tab-label { font-size: 11px; font-weight: 500; }
+.tab-btn.active { color: var(--color-accent); }
 
 /* ============ Bottom Sheet ============ */
 .sheet-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  display: flex;
-  align-items: flex-end;
-  z-index: 50;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
+  position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: flex;
+  align-items: flex-end; z-index: 50; opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
 }
-
-.sheet-overlay.visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
+.sheet-overlay.visible { opacity: 1; pointer-events: auto; }
 .sheet {
-  background: var(--color-bg);
-  width: 100%;
-  max-height: 90%;
-  border-radius: 16px 16px 0 0;
-  display: flex;
-  flex-direction: column;
-  transform: translateY(100%);
-  transition: transform 0.3s ease;
+  background: var(--color-bg); width: 100%; max-height: 90%; border-radius: 16px 16px 0 0;
+  display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s ease;
 }
-
-.sheet-overlay.visible .sheet {
-  transform: translateY(0);
-}
-
+.sheet-overlay.visible .sheet { transform: translateY(0); }
 .sheet-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--color-separator);
-  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between; padding: 14px 16px;
+  border-bottom: 1px solid var(--color-separator); flex-shrink: 0;
 }
+.sheet-title { font-weight: 600; font-size: 16px; color: var(--color-text); }
+.sheet-btn { background: none; border: none; font-size: 16px; color: var(--color-accent); padding: 4px; }
+.sheet-btn-primary { font-weight: 600; }
+.sheet-body { overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px; padding-bottom: 40px; }
 
-.sheet-title {
-  font-weight: 600;
-  font-size: 16px;
-  color: var(--color-text);
+.form-group { padding: 10px 14px; border-bottom: 1px solid var(--color-separator); }
+.grouped-list .form-group:last-child { border-bottom: none; }
+.form-group label { display: block; font-size: 13px; color: var(--color-text-secondary); margin-bottom: 3px; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; border: none; background: none; font-size: 16px; color: var(--color-text);
+  padding: 0; font-family: inherit; -webkit-appearance: none;
 }
+.form-group textarea { resize: none; height: 44px; }
+.form-group select { -webkit-appearance: menulist; }
 
-.sheet-btn {
-  background: none;
-  border: none;
-  font-size: 16px;
-  color: var(--color-accent);
-  padding: 4px;
-}
-
-.sheet-btn-primary {
-  font-weight: 600;
-}
-
-.sheet-body {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 16px;
-  padding-bottom: 40px;
-}
-
-.form-group {
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--color-separator);
-}
-
-.grouped-list .form-group:last-child {
-  border-bottom: none;
-}
-
-.form-group label {
-  display: block;
-  font-size: 13px;
-  color: var(--color-text-secondary);
-  margin-bottom: 3px;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-  width: 100%;
-  border: none;
-  background: none;
-  font-size: 16px;
-  color: var(--color-text);
-  padding: 0;
-  font-family: inherit;
-  -webkit-appearance: none;
-}
-
-.form-group textarea {
-  resize: none;
-  height: 44px;
-}
-
-.form-group select {
-  -webkit-appearance: menulist;
-}
-
-.chips-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.chip {
-  padding: 7px 14px;
-  border-radius: 16px;
-  background: var(--color-chip-bg);
-  color: var(--color-text);
-  font-size: 14px;
-  cursor: pointer;
-  user-select: none;
-}
-
-.chip.selected {
-  background: var(--color-accent);
-  color: #fff;
-  font-weight: 500;
-}
+.chips-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.chip { padding: 7px 14px; border-radius: 16px; background: var(--color-chip-bg); color: var(--color-text); font-size: 14px; cursor: pointer; user-select: none; }
+.chip.selected { background: var(--color-accent); color: #fff; font-weight: 500; }
 
 .danger-link {
-  display: block;
-  width: 100%;
-  text-align: center;
-  background: none;
-  border: none;
-  color: var(--color-danger);
-  font-size: 16px;
-  padding: 14px 0;
-  margin-top: 20px;
+  display: block; width: 100%; text-align: center; background: none; border: none;
+  color: var(--color-danger); font-size: 16px; padding: 14px 0; margin-top: 20px;
 }
+
+/* ============ Screens (Vollbild-Unterseiten) ============ */
+.screen-layer { position: absolute; inset: 0; z-index: 60; visibility: hidden; }
+.screen-layer.visible { visibility: visible; }
+.screen { position: absolute; inset: 0; background: var(--color-bg); display: none; flex-direction: column; }
+.screen.active { display: flex; }
+
+.screen-header {
+  position: relative; height: 46px; display: flex; align-items: center; padding: 0 6px;
+  border-bottom: 1px solid var(--color-separator); flex-shrink: 0; background: var(--color-header-bg);
+}
+.screen-back { position: relative; z-index: 2; background: none; border: none; color: var(--color-accent); font-size: 16px; padding: 6px; max-width: 40%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.screen-action { position: relative; z-index: 2; background: none; border: none; color: var(--color-accent); font-size: 20px; padding: 6px; margin-left: auto; }
+.screen-title {
+  position: absolute; left: 60px; right: 60px; text-align: center; font-size: 16px; font-weight: 600;
+  color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.screen-content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 8px 16px 16px 16px; }
+
+.screen-footer {
+  flex-shrink: 0; padding: 10px 16px; padding-bottom: max(env(safe-area-inset-bottom, 0px), 10px);
+  border-top: 1px solid var(--color-separator); background: var(--color-header-bg);
+}
+.footer-summary { font-size: 13px; color: var(--color-text-secondary); text-align: center; margin-bottom: 8px; }
+.footer-buttons { display: flex; gap: 10px; }
+.btn-primary { flex: 1; background: var(--color-accent); color: #fff; border: none; border-radius: 12px; padding: 12px; font-size: 16px; font-weight: 600; }
+.btn-secondary { flex: 1; background: var(--color-chip-bg); color: var(--color-text); border: none; border-radius: 12px; padding: 12px; font-size: 16px; font-weight: 500; }
+
+/* ============ Item-Zeilen (Bearbeiten / Packen) ============ */
+.circle-toggle {
+  width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--color-separator);
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  margin-right: 10px; color: #fff; font-size: 13px; font-weight: 700;
+}
+.circle-toggle.checked { background: var(--color-accent); border-color: var(--color-accent); }
+
+.item-row { padding: 10px 14px; border-bottom: 1px solid var(--color-separator); }
+.item-row:last-child { border-bottom: none; }
+.item-row-top { display: flex; align-items: center; cursor: pointer; }
+.item-row-info { flex: 1; min-width: 0; }
+.item-row-name { font-size: 16px; color: var(--color-text); font-weight: 500; }
+.item-row-sub { font-size: 13px; color: var(--color-text-secondary); margin-top: 1px; }
+.item-row-weight { font-size: 14px; color: var(--color-text-secondary); margin-left: 8px; white-space: nowrap; flex-shrink: 0; }
+
+.item-row-controls { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding-left: 32px; }
+.stepper { display: flex; align-items: center; gap: 6px; background: var(--color-chip-bg); border-radius: 8px; padding: 4px 8px; flex-shrink: 0; }
+.stepper button { width: 24px; height: 24px; border-radius: 50%; border: none; background: var(--color-card); font-size: 16px; color: var(--color-accent); display: flex; align-items: center; justify-content: center; padding: 0; }
+.stepper-value { min-width: 20px; text-align: center; font-size: 15px; color: var(--color-text); font-weight: 500; }
+.mini-select { flex: 1; min-width: 0; border: none; background: var(--color-chip-bg); border-radius: 8px; padding: 6px 8px; font-size: 13px; color: var(--color-text); -webkit-appearance: none; }
+.dup-btn { background: none; border: none; font-size: 18px; color: var(--color-accent); padding: 2px 4px; flex-shrink: 0; }
+
+.gepaeck-subheader { font-size: 12px; color: var(--color-text-secondary); margin: 8px 4px 4px 4px; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -494,39 +275,11 @@ body {
       </div>
 
       <div class="section-header">Deine letzten Packlisten</div>
-      <div class="grouped-list" style="background:none;">
-        <div class="list-card">
-          <div class="list-card-title">Urlaub Spanien</div>
-          <div class="list-card-sub">Meer, Standard Sommer</div>
-          <div class="progress-bar"><div class="progress-fill" style="width: 65%;"></div></div>
-          <div class="list-card-footer">65 % gepackt</div>
-        </div>
-        <div class="list-card">
-          <div class="list-card-title">Skiurlaub Österreich</div>
-          <div class="list-card-sub">Standard Winter, Ski Fahren</div>
-          <div class="progress-bar"><div class="progress-fill" style="width: 20%;"></div></div>
-          <div class="list-card-footer">20 % gepackt</div>
-        </div>
-      </div>
+      <div id="startPacklistenContainer"></div>
     </section>
 
     <section class="tab-page hidden" id="tab-packlisten">
-      <div class="grouped-list">
-        <div class="list-row">
-          <div class="list-row-main">
-            <div class="list-row-title">Urlaub Spanien</div>
-            <div class="list-row-sub">Meer, Standard Sommer · 24 Artikel</div>
-          </div>
-          <div class="chevron">›</div>
-        </div>
-        <div class="list-row">
-          <div class="list-row-main">
-            <div class="list-row-title">Skiurlaub Österreich</div>
-            <div class="list-row-sub">Standard Winter, Ski Fahren · 18 Artikel</div>
-          </div>
-          <div class="chevron">›</div>
-        </div>
-      </div>
+      <div id="packlistenListContainer"></div>
     </section>
 
     <section class="tab-page hidden" id="tab-artikel">
@@ -557,25 +310,21 @@ body {
 
   <nav class="tab-bar">
     <button class="tab-btn active" data-tab="tab-start" data-title="PackPilot">
-      <span class="tab-icon">🏠</span>
-      <span class="tab-label">Start</span>
+      <span class="tab-icon">🏠</span><span class="tab-label">Start</span>
     </button>
     <button class="tab-btn" data-tab="tab-packlisten" data-title="Packlisten">
-      <span class="tab-icon">🧳</span>
-      <span class="tab-label">Packlisten</span>
+      <span class="tab-icon">🧳</span><span class="tab-label">Packlisten</span>
     </button>
     <button class="tab-btn" data-tab="tab-artikel" data-title="Artikel">
-      <span class="tab-icon">📦</span>
-      <span class="tab-label">Artikel</span>
+      <span class="tab-icon">📦</span><span class="tab-label">Artikel</span>
     </button>
     <button class="tab-btn" data-tab="tab-einstellungen" data-title="Einstellungen">
-      <span class="tab-icon">⚙️</span>
-      <span class="tab-label">Einstellungen</span>
+      <span class="tab-icon">⚙️</span><span class="tab-label">Einstellungen</span>
     </button>
   </nav>
 
   <!-- ============ Bottom Sheet: Artikel anlegen/bearbeiten ============ -->
-  <div class="sheet-overlay hidden" id="artikelSheetOverlay">
+  <div class="sheet-overlay" id="artikelSheetOverlay">
     <div class="sheet">
       <div class="sheet-header">
         <button class="sheet-btn" id="artikelSheetCancel">Abbrechen</button>
@@ -583,7 +332,6 @@ body {
         <button class="sheet-btn sheet-btn-primary" id="artikelSheetSave">Sichern</button>
       </div>
       <div class="sheet-body">
-
         <div class="grouped-list">
           <div class="form-group">
             <label>Artikelname</label>
@@ -619,15 +367,90 @@ body {
         </div>
 
         <button class="danger-link hidden" id="artikelDeleteBtn">Artikel als gelöscht markieren</button>
-
       </div>
     </div>
+  </div>
+
+  <!-- ============ Action Sheet (generisch) ============ -->
+  <div class="sheet-overlay" id="actionSheetOverlay">
+    <div class="sheet">
+      <div class="sheet-body" id="actionSheetBody" style="padding-top:8px;"></div>
+    </div>
+  </div>
+
+  <!-- ============ Screens ============ -->
+  <div class="screen-layer" id="screenLayer">
+
+    <div class="screen" id="screen-packliste-neu">
+      <div class="screen-header">
+        <button class="screen-back" id="neuBackBtn">‹ Zurück</button>
+        <div class="screen-title">Neue Packliste</div>
+      </div>
+      <div class="screen-content">
+        <div class="grouped-list">
+          <div class="form-group" style="border-bottom:none;">
+            <label>Listenname</label>
+            <input type="text" id="neuName" placeholder="z.B. Urlaub Spanien">
+          </div>
+        </div>
+        <div class="section-header">Urlaubstyp(en) auswählen</div>
+        <div class="grouped-list">
+          <div class="form-group" style="border-bottom:none;">
+            <div class="chips-wrap" id="neuUrlaubstypenChips"></div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-footer">
+        <div class="footer-buttons">
+          <button class="btn-primary" id="neuWeiterBtn" style="width:100%;">Weiter</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen" id="screen-packliste-bearbeiten">
+      <div class="screen-header">
+        <button class="screen-back" id="bearbeitenBackBtn">‹ Zurück</button>
+        <div class="screen-title" id="screenBearbeitenTitle">Packliste</div>
+      </div>
+      <div class="screen-content">
+        <button class="danger-link" style="color:var(--color-accent);margin-top:0;" id="toggleAlleBtn">Weitere Artikel anzeigen</button>
+        <div id="bearbeitenListContainer"></div>
+      </div>
+      <div class="screen-footer">
+        <div class="footer-summary" id="bearbeitenFooterSummary"></div>
+        <div class="footer-buttons">
+          <button class="btn-secondary" id="bearbeitenSpeichernBtn">Speichern</button>
+          <button class="btn-primary" id="bearbeitenSpeichernPackenBtn">Speichern &amp; Packen</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen" id="screen-packen">
+      <div class="screen-header">
+        <button class="screen-back" id="packenBackBtn">‹ Zurück</button>
+        <div class="screen-title" id="screenPackenTitle">Packen</div>
+        <button class="screen-action" id="packenAuswertungBtn">⚖️</button>
+      </div>
+      <div class="screen-content" id="packenListContainer"></div>
+      <div class="screen-footer">
+        <div class="footer-summary" id="packenFooterSummary"></div>
+      </div>
+    </div>
+
+    <div class="screen" id="screen-auswertung">
+      <div class="screen-header">
+        <button class="screen-back" id="auswertungBackBtn">‹ Zurück</button>
+        <div class="screen-title">Gewichtsauswertung</div>
+      </div>
+      <div class="screen-content" id="auswertungContainer"></div>
+    </div>
+
   </div>
 
 </div>
 
 <script>
-// ============ Datenmodell (vorerst nur im Arbeitsspeicher) ============
+// ================= Datenmodell (vorerst nur im Arbeitsspeicher) =================
 
 const state = {
   kategorien: ["Kleidung", "Sonderkleidung", "Equipment", "Bad und Hygieneartikel", "Sonstiges", "Medizin", "Verpflegung", "Transport"],
@@ -638,25 +461,116 @@ const state = {
     { id: 1, name: "Socken", kategorie: "Kleidung", gewicht: 20, lagerort: "Kleiderschrank", standardmenge: 5, urlaubstypen: ["Standard Sommer", "Standard Winter", "Wandern", "Meer", "Ski Fahren", "Camping"], kommentar: "", status: "Aktiv" },
     { id: 2, name: "T-Shirt", kategorie: "Kleidung", gewicht: 150, lagerort: "Kleiderschrank", standardmenge: 4, urlaubstypen: ["Standard Sommer", "Meer", "Camping"], kommentar: "", status: "Aktiv" },
     { id: 3, name: "Ladekabel", kategorie: "Equipment", gewicht: 50, lagerort: "Büro", standardmenge: 1, urlaubstypen: ["Standard Sommer", "Standard Winter", "Wandern", "Meer", "Ski Fahren", "Camping", "Business"], kommentar: "", status: "Aktiv" }
-  ]
+  ],
+  packlisten: []
 };
 
 let nextArtikelId = 4;
+let nextPacklisteId = 1;
 let aktuellBearbeiteterArtikelId = null;
 let ausgewaehlteUrlaubstypen = [];
+let neuScreenTypen = [];
+let draft = null;
+let currentPackenListeId = null;
+let screenStack = [];
 
-const badgeFarben = ["#FF9500", "#FF3B30", "#34C759", "#007AFF", "#AF52DE", "#FF2D55", "#5856D6", "#00C7BE"];
+// ================= Hilfsfunktionen =================
 
-function farbeFuerText(text) {
-  let summe = 0;
-  for (let i = 0; i < text.length; i++) summe += text.charCodeAt(i);
-  return badgeFarben[summe % badgeFarben.length];
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = text == null ? "" : text;
+  return div.innerHTML;
 }
 
-// ============ Tab-Navigation ============
+function artikelGewicht(artikelId) {
+  const a = state.artikel.find(function (x) { return x.id === artikelId; });
+  return a ? a.gewicht : 0;
+}
+
+function formatKg(gramm) {
+  return (gramm / 1000).toFixed(2).replace(".", ",");
+}
+
+function renderChipsGeneric(container, options, selectedArray) {
+  container.innerHTML = options.map(function (o) {
+    const aktiv = selectedArray.indexOf(o) > -1;
+    return '<div class="chip' + (aktiv ? ' selected' : '') + '" data-val="' + escapeHtml(o) + '">' + escapeHtml(o) + '</div>';
+  }).join("");
+
+  container.querySelectorAll(".chip").forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      const v = chip.dataset.val;
+      const idx = selectedArray.indexOf(v);
+      if (idx > -1) { selectedArray.splice(idx, 1); } else { selectedArray.push(v); }
+      chip.classList.toggle("selected");
+    });
+  });
+}
+
+// ================= Screen-Navigation =================
+
+function showScreen(id) {
+  screenStack.push(id);
+  document.querySelectorAll(".screen").forEach(function (s) { s.classList.remove("active"); });
+  document.getElementById(id).classList.add("active");
+  document.getElementById("screenLayer").classList.add("visible");
+}
+
+function replaceScreen(id) {
+  if (screenStack.length === 0) { showScreen(id); return; }
+  screenStack[screenStack.length - 1] = id;
+  document.querySelectorAll(".screen").forEach(function (s) { s.classList.remove("active"); });
+  document.getElementById(id).classList.add("active");
+  document.getElementById("screenLayer").classList.add("visible");
+}
+
+function popScreen() {
+  screenStack.pop();
+  if (screenStack.length === 0) {
+    document.getElementById("screenLayer").classList.remove("visible");
+    document.querySelectorAll(".screen").forEach(function (s) { s.classList.remove("active"); });
+  } else {
+    const prev = screenStack[screenStack.length - 1];
+    document.querySelectorAll(".screen").forEach(function (s) { s.classList.remove("active"); });
+    document.getElementById(prev).classList.add("active");
+  }
+}
+
+// ================= Action Sheet (generisch) =================
+
+function showActionSheet(title, actions) {
+  const overlay = document.getElementById("actionSheetOverlay");
+  let html = "";
+  if (title) {
+    html += '<div style="text-align:center;font-size:13px;color:var(--color-text-secondary);padding:6px 0 10px 0;">' + escapeHtml(title) + '</div>';
+  }
+  html += '<div class="grouped-list" style="margin-bottom:10px;">';
+  actions.forEach(function (a, i) {
+    html += '<div class="list-row action-sheet-btn" data-idx="' + i + '" style="justify-content:center;">' +
+              '<div class="list-row-title" style="color:' + (a.danger ? "var(--color-danger)" : "var(--color-accent)") + ';">' + escapeHtml(a.label) + '</div>' +
+            '</div>';
+  });
+  html += '</div>';
+  html += '<div class="grouped-list"><div class="list-row action-sheet-cancel" style="justify-content:center;"><div class="list-row-title" style="font-weight:600;">Abbrechen</div></div></div>';
+
+  document.getElementById("actionSheetBody").innerHTML = html;
+  overlay.classList.add("visible");
+
+  overlay.querySelectorAll(".action-sheet-btn").forEach(function (btn) {
+    btn.onclick = function () { closeActionSheet(); actions[parseInt(btn.dataset.idx)].onClick(); };
+  });
+  overlay.querySelector(".action-sheet-cancel").onclick = closeActionSheet;
+}
+
+function closeActionSheet() {
+  document.getElementById("actionSheetOverlay").classList.remove("visible");
+}
+
+// ================= Tab-Navigation & Grundgerüst =================
 
 const actionsByTab = {
-  "tab-artikel": openArtikelSheetNeu
+  "tab-artikel": openArtikelSheetNeu,
+  "tab-packlisten": openPacklisteNeuScreen
 };
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -671,9 +585,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const targetTitle = btn.getAttribute("data-title");
       currentTab = targetId;
 
-      document.querySelectorAll(".tab-page").forEach(function (page) {
-        page.classList.add("hidden");
-      });
+      document.querySelectorAll(".tab-page").forEach(function (page) { page.classList.add("hidden"); });
       document.getElementById(targetId).classList.remove("hidden");
 
       tabButtons.forEach(function (b) { b.classList.remove("active"); });
@@ -682,11 +594,8 @@ document.addEventListener("DOMContentLoaded", function () {
       pageTitle.textContent = targetTitle;
       document.querySelector(".app-content").scrollTop = 0;
 
-      if (actionsByTab[targetId]) {
-        headerActionBtn.classList.add("visible");
-      } else {
-        headerActionBtn.classList.remove("visible");
-      }
+      if (actionsByTab[targetId]) { headerActionBtn.classList.add("visible"); }
+      else { headerActionBtn.classList.remove("visible"); }
     });
   });
 
@@ -695,39 +604,67 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   document.getElementById("btnNeuePackliste").addEventListener("click", function () {
-    document.querySelector('.tab-btn[data-tab="tab-packlisten"]').click();
+    openPacklisteNeuScreen();
   });
-
   document.getElementById("btnArtikelVerwalten").addEventListener("click", function () {
     document.querySelector('.tab-btn[data-tab="tab-artikel"]').click();
   });
 
-  // Suche
+  // ---- Artikel ----
   document.getElementById("artikelSearch").addEventListener("input", function (e) {
     renderArtikelListe(e.target.value);
   });
-
-  // Sheet-Buttons
   document.getElementById("artikelSheetCancel").addEventListener("click", closeArtikelSheet);
   document.getElementById("artikelSheetSave").addEventListener("click", speichereArtikel);
   document.getElementById("artikelDeleteBtn").addEventListener("click", loescheArtikel);
   document.getElementById("artikelSheetOverlay").addEventListener("click", function (e) {
     if (e.target === this) closeArtikelSheet();
   });
-
-  // Klick auf Artikel-Zeile (Event Delegation)
   document.getElementById("artikelListContainer").addEventListener("click", function (e) {
     const row = e.target.closest(".list-row");
-    if (row && row.dataset.id) {
-      openArtikelSheetBearbeiten(parseInt(row.dataset.id));
-    }
+    if (row && row.dataset.id) openArtikelSheetBearbeiten(parseInt(row.dataset.id));
   });
+
+  // ---- Packlisten-Tab ----
+  document.getElementById("packlistenListContainer").addEventListener("click", function (e) {
+    const moreBtn = e.target.closest(".row-more-btn");
+    if (moreBtn) { zeigeListenActions(parseInt(moreBtn.dataset.more)); return; }
+    const row = e.target.closest(".list-row");
+    if (row && row.dataset.id) openPacklisteBearbeiten(parseInt(row.dataset.id));
+  });
+  document.getElementById("startPacklistenContainer").addEventListener("click", function (e) {
+    const card = e.target.closest(".list-card");
+    if (card && card.dataset.startid) openPacken(parseInt(card.dataset.startid));
+  });
+
+  // ---- Packliste Neu ----
+  document.getElementById("neuBackBtn").addEventListener("click", function () { popScreen(); });
+  document.getElementById("neuWeiterBtn").addEventListener("click", packlisteNeuWeiter);
+
+  // ---- Packliste Bearbeiten ----
+  document.getElementById("bearbeitenBackBtn").addEventListener("click", backFromBearbeiten);
+  document.getElementById("toggleAlleBtn").addEventListener("click", toggleAlleAnzeigen);
+  document.getElementById("bearbeitenSpeichernBtn").addEventListener("click", function () { speichereBearbeitung(false); });
+  document.getElementById("bearbeitenSpeichernPackenBtn").addEventListener("click", function () { speichereBearbeitung(true); });
+
+  // ---- Packen ----
+  document.getElementById("packenBackBtn").addEventListener("click", function () {
+    popScreen();
+    renderPacklistenTab();
+    renderStartTab();
+  });
+  document.getElementById("packenAuswertungBtn").addEventListener("click", openAuswertung);
+
+  // ---- Auswertung ----
+  document.getElementById("auswertungBackBtn").addEventListener("click", function () { popScreen(); });
 
   befuelleAuswahlfelder();
   renderArtikelListe();
+  renderPacklistenTab();
+  renderStartTab();
 });
 
-// ============ Artikel-Liste rendern ============
+// ================= ARTIKEL: Liste, Formular =================
 
 function renderArtikelListe(suchtext) {
   suchtext = (suchtext || "").trim().toLowerCase();
@@ -737,24 +674,19 @@ function renderArtikelListe(suchtext) {
 
   state.kategorien.forEach(function (kategorie) {
     const artikelInKategorie = state.artikel.filter(function (a) {
-      return a.status === "Aktiv" &&
-             a.kategorie === kategorie &&
-             a.name.toLowerCase().includes(suchtext);
+      return a.status === "Aktiv" && a.kategorie === kategorie && a.name.toLowerCase().includes(suchtext);
     });
 
     if (artikelInKategorie.length > 0) {
       treffer += artikelInKategorie.length;
-      html += '<div class="section-header">' + escapeHtml(kategorie) + '</div>';
-      html += '<div class="grouped-list">';
+      html += '<div class="section-header">' + escapeHtml(kategorie) + '</div><div class="grouped-list">';
       artikelInKategorie.forEach(function (a) {
-        const farbe = farbeFuerText(a.lagerort || "?");
-        const initiale = (a.lagerort || "?").charAt(0).toUpperCase();
         html += '<div class="list-row" data-id="' + a.id + '">' +
                   '<div class="list-row-main">' +
                     '<div class="list-row-title">' + escapeHtml(a.name) + '</div>' +
                     '<div class="list-row-sub">' + a.gewicht + ' g · ' + escapeHtml(a.lagerort || "-") + '</div>' +
                   '</div>' +
-                  '<div class="badge" style="background:' + farbe + ';">' + initiale + '</div>' +
+                  '<div class="chevron">›</div>' +
                 '</div>';
       });
       html += '</div>';
@@ -764,17 +696,8 @@ function renderArtikelListe(suchtext) {
   if (treffer === 0) {
     html = '<div class="empty-hint">Keine Artikel gefunden.<br>Tippe oben rechts auf "+", um einen neuen Artikel anzulegen.</div>';
   }
-
   container.innerHTML = html;
 }
-
-function escapeHtml(text) {
-  const div = document.createElement("div");
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-// ============ Auswahlfelder (Kategorie/Lagerort) befüllen ============
 
 function befuelleAuswahlfelder() {
   const kategorieSelect = document.getElementById("fKategorie");
@@ -787,31 +710,6 @@ function befuelleAuswahlfelder() {
     return '<option value="' + escapeHtml(l) + '">' + escapeHtml(l) + '</option>';
   }).join("");
 }
-
-// ============ Urlaubstypen-Chips ============
-
-function renderUrlaubstypenChips() {
-  const wrap = document.getElementById("fUrlaubstypenChips");
-  wrap.innerHTML = state.urlaubstypen.map(function (typ) {
-    const aktiv = ausgewaehlteUrlaubstypen.includes(typ);
-    return '<div class="chip' + (aktiv ? ' selected' : '') + '" data-typ="' + escapeHtml(typ) + '">' + escapeHtml(typ) + '</div>';
-  }).join("");
-
-  wrap.querySelectorAll(".chip").forEach(function (chip) {
-    chip.addEventListener("click", function () {
-      const typ = chip.dataset.typ;
-      if (ausgewaehlteUrlaubstypen.includes(typ)) {
-        ausgewaehlteUrlaubstypen = ausgewaehlteUrlaubstypen.filter(function (t) { return t !== typ; });
-        chip.classList.remove("selected");
-      } else {
-        ausgewaehlteUrlaubstypen.push(typ);
-        chip.classList.add("selected");
-      }
-    });
-  });
-}
-
-// ============ Sheet öffnen/schließen ============
 
 function openArtikelSheetNeu() {
   aktuellBearbeiteterArtikelId = null;
@@ -826,7 +724,7 @@ function openArtikelSheetNeu() {
   document.getElementById("fKommentar").value = "";
   document.getElementById("artikelDeleteBtn").classList.add("hidden");
 
-  renderUrlaubstypenChips();
+  renderChipsGeneric(document.getElementById("fUrlaubstypenChips"), state.urlaubstypen, ausgewaehlteUrlaubstypen);
   document.getElementById("artikelSheetOverlay").classList.add("visible");
 }
 
@@ -846,15 +744,13 @@ function openArtikelSheetBearbeiten(id) {
   document.getElementById("fKommentar").value = a.kommentar || "";
   document.getElementById("artikelDeleteBtn").classList.remove("hidden");
 
-  renderUrlaubstypenChips();
+  renderChipsGeneric(document.getElementById("fUrlaubstypenChips"), state.urlaubstypen, ausgewaehlteUrlaubstypen);
   document.getElementById("artikelSheetOverlay").classList.add("visible");
 }
 
 function closeArtikelSheet() {
   document.getElementById("artikelSheetOverlay").classList.remove("visible");
 }
-
-// ============ Speichern / Löschen ============
 
 function speichereArtikel() {
   const name = document.getElementById("fArtikelname").value.trim();
@@ -865,41 +761,20 @@ function speichereArtikel() {
   const standardmenge = standardmengeInput ? parseFloat(standardmengeInput) : 1;
   const kommentar = document.getElementById("fKommentar").value.trim();
 
-  if (!name) {
-    alert("Bitte einen Artikelnamen eingeben.");
-    return;
-  }
-  if (!gewicht || gewicht <= 0) {
-    alert("Bitte ein gültiges Gewicht (in Gramm) eingeben.");
-    return;
-  }
-  if (ausgewaehlteUrlaubstypen.length === 0) {
-    alert("Bitte mindestens einen Urlaubstyp auswählen.");
-    return;
-  }
+  if (!name) { alert("Bitte einen Artikelnamen eingeben."); return; }
+  if (!gewicht || gewicht <= 0) { alert("Bitte ein gültiges Gewicht (in Gramm) eingeben."); return; }
+  if (ausgewaehlteUrlaubstypen.length === 0) { alert("Bitte mindestens einen Urlaubstyp auswählen."); return; }
 
   if (aktuellBearbeiteterArtikelId === null) {
     state.artikel.push({
-      id: nextArtikelId++,
-      name: name,
-      kategorie: kategorie,
-      gewicht: gewicht,
-      lagerort: lagerort,
-      standardmenge: standardmenge,
-      urlaubstypen: ausgewaehlteUrlaubstypen.slice(),
-      kommentar: kommentar,
-      status: "Aktiv"
+      id: nextArtikelId++, name: name, kategorie: kategorie, gewicht: gewicht, lagerort: lagerort,
+      standardmenge: standardmenge, urlaubstypen: ausgewaehlteUrlaubstypen.slice(), kommentar: kommentar, status: "Aktiv"
     });
   } else {
     const a = state.artikel.find(function (x) { return x.id === aktuellBearbeiteterArtikelId; });
     if (a) {
-      a.name = name;
-      a.kategorie = kategorie;
-      a.gewicht = gewicht;
-      a.lagerort = lagerort;
-      a.standardmenge = standardmenge;
-      a.urlaubstypen = ausgewaehlteUrlaubstypen.slice();
-      a.kommentar = kommentar;
+      a.name = name; a.kategorie = kategorie; a.gewicht = gewicht; a.lagerort = lagerort;
+      a.standardmenge = standardmenge; a.urlaubstypen = ausgewaehlteUrlaubstypen.slice(); a.kommentar = kommentar;
     }
   }
 
@@ -917,6 +792,550 @@ function loescheArtikel() {
 
   closeArtikelSheet();
   renderArtikelListe(document.getElementById("artikelSearch").value);
+}
+
+// ================= START-TAB (dynamisch) =================
+
+function renderStartTab() {
+  const container = document.getElementById("startPacklistenContainer");
+  if (state.packlisten.length === 0) {
+    container.innerHTML = '<div class="empty-hint">Noch keine Packliste vorhanden.<br>Tippe oben auf "Neue Packliste".</div>';
+    return;
+  }
+  const sorted = state.packlisten.slice().sort(function (a, b) {
+    return new Date(b.geaendert || b.erstellt) - new Date(a.geaendert || a.erstellt);
+  }).slice(0, 3);
+
+  let html = "";
+  sorted.forEach(function (p) {
+    const totalG = p.items.reduce(function (s, it) { return s + it.anzahl * artikelGewicht(it.artikelId); }, 0);
+    const totalP = p.items.reduce(function (s, it) { return s + it.anzahlGepackt * artikelGewicht(it.artikelId); }, 0);
+    const pct = totalG > 0 ? Math.min(100, Math.round((totalP / totalG) * 100)) : 0;
+    html += '<div class="list-card" data-startid="' + p.id + '">' +
+              '<div class="list-card-title">' + escapeHtml(p.name) + '</div>' +
+              '<div class="list-card-sub">' + escapeHtml(p.urlaubstypen.join(", ")) + '</div>' +
+              '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%;"></div></div>' +
+              '<div class="list-card-footer">' + pct + ' % gepackt</div>' +
+            '</div>';
+  });
+  container.innerHTML = html;
+}
+
+// ================= PACKLISTEN-TAB (dynamisch) =================
+
+function renderPacklistenTab() {
+  const container = document.getElementById("packlistenListContainer");
+  if (state.packlisten.length === 0) {
+    container.innerHTML = '<div class="empty-hint">Noch keine Packliste erstellt.<br>Tippe oben rechts auf "+".</div>';
+    return;
+  }
+  let html = '<div class="grouped-list">';
+  state.packlisten.forEach(function (p) {
+    html += '<div class="list-row" data-id="' + p.id + '">' +
+              '<div class="list-row-main">' +
+                '<div class="list-row-title">' + escapeHtml(p.name) + '</div>' +
+                '<div class="list-row-sub">' + escapeHtml(p.urlaubstypen.join(", ")) + ' · ' + p.items.length + ' Artikel</div>' +
+              '</div>' +
+              '<button class="row-more-btn" data-more="' + p.id + '">•••</button>' +
+            '</div>';
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function zeigeListenActions(id) {
+  const p = state.packlisten.find(function (x) { return x.id === id; });
+  if (!p) return;
+  showActionSheet(p.name, [
+    { label: "Packen starten", onClick: function () { openPacken(id); } },
+    { label: "Bearbeiten", onClick: function () { openPacklisteBearbeiten(id); } },
+    { label: "Als Kopie verwenden", onClick: function () { kopierePackliste(id); } },
+    { label: "Löschen", danger: true, onClick: function () { loeschePackliste(id); } }
+  ]);
+}
+
+function kopierePackliste(id) {
+  const p = state.packlisten.find(function (x) { return x.id === id; });
+  if (!p) return;
+  const neuerName = prompt("Name für die Kopie:", p.name + " (Kopie)");
+  if (!neuerName || !neuerName.trim()) return;
+
+  draft = {
+    packlisteId: null,
+    name: neuerName.trim(),
+    urlaubstypen: p.urlaubstypen.slice(),
+    alleAnzeigen: false,
+    rows: p.items.map(function (it) {
+      return { rowId: it.id, artikelId: it.artikelId, selected: true, anzahl: it.anzahl, gepaeckstueck: it.gepaeckstueck, anzahlGepackt: 0 };
+    }),
+    dirty: true,
+    nextRowId: (p.items.length ? Math.max.apply(null, p.items.map(function (i) { return i.id; })) : 0) + 1
+  };
+  ergaenzeVorschlagsZeilen();
+  renderBearbeitenScreen();
+  showScreen("screen-packliste-bearbeiten");
+}
+
+function loeschePackliste(id) {
+  const ok = confirm("Diese Packliste wirklich unwiderruflich löschen?");
+  if (!ok) return;
+  state.packlisten = state.packlisten.filter(function (x) { return x.id !== id; });
+  renderPacklistenTab();
+  renderStartTab();
+}
+
+// ================= PACKLISTE NEU (Schritt 1) =================
+
+function openPacklisteNeuScreen() {
+  neuScreenTypen = [];
+  document.getElementById("neuName").value = "";
+  renderChipsGeneric(document.getElementById("neuUrlaubstypenChips"), state.urlaubstypen, neuScreenTypen);
+  showScreen("screen-packliste-neu");
+}
+
+function packlisteNeuWeiter() {
+  const name = document.getElementById("neuName").value.trim();
+  if (!name) { alert("Bitte einen Namen eingeben."); return; }
+  if (neuScreenTypen.length === 0) { alert("Bitte mindestens einen Urlaubstyp auswählen."); return; }
+  if (state.packlisten.some(function (p) { return p.name.toLowerCase() === name.toLowerCase(); })) {
+    alert("Eine Packliste mit diesem Namen existiert bereits.");
+    return;
+  }
+
+  draft = { packlisteId: null, name: name, urlaubstypen: neuScreenTypen.slice(), alleAnzeigen: false, rows: [], dirty: false, nextRowId: 1 };
+  ergaenzeVorschlagsZeilen();
+  renderBearbeitenScreen();
+  replaceScreen("screen-packliste-bearbeiten");
+}
+
+// ================= PACKLISTE BEARBEITEN (Schritt 2+3) =================
+
+function openPacklisteBearbeiten(packlisteId) {
+  const p = state.packlisten.find(function (x) { return x.id === packlisteId; });
+  if (!p) return;
+
+  draft = {
+    packlisteId: p.id,
+    name: p.name,
+    urlaubstypen: p.urlaubstypen.slice(),
+    alleAnzeigen: false,
+    rows: p.items.map(function (it) {
+      return { rowId: it.id, artikelId: it.artikelId, selected: true, anzahl: it.anzahl, gepaeckstueck: it.gepaeckstueck, anzahlGepackt: it.anzahlGepackt };
+    }),
+    dirty: false,
+    nextRowId: (p.items.length ? Math.max.apply(null, p.items.map(function (i) { return i.id; })) : 0) + 1
+  };
+  ergaenzeVorschlagsZeilen();
+  renderBearbeitenScreen();
+  showScreen("screen-packliste-bearbeiten");
+}
+
+function ergaenzeVorschlagsZeilen() {
+  const vorhandeneIds = {};
+  draft.rows.forEach(function (r) { vorhandeneIds[r.artikelId] = true; });
+
+  state.artikel.filter(function (a) { return a.status === "Aktiv"; }).forEach(function (a) {
+    if (vorhandeneIds[a.id]) return;
+    const passt = a.urlaubstypen.some(function (t) { return draft.urlaubstypen.indexOf(t) > -1; });
+    if (passt || draft.alleAnzeigen) {
+      draft.rows.push({ rowId: draft.nextRowId++, artikelId: a.id, selected: false, anzahl: a.standardmenge || 1, gepaeckstueck: "", anzahlGepackt: 0 });
+    }
+  });
+}
+
+function toggleAlleAnzeigen() {
+  draft.alleAnzeigen = !draft.alleAnzeigen;
+  if (!draft.alleAnzeigen) {
+    draft.rows = draft.rows.filter(function (r) {
+      if (r.selected) return true;
+      const a = state.artikel.find(function (x) { return x.id === r.artikelId; });
+      if (!a) return false;
+      return a.urlaubstypen.some(function (t) { return draft.urlaubstypen.indexOf(t) > -1; });
+    });
+  } else {
+    ergaenzeVorschlagsZeilen();
+  }
+  renderBearbeitenScreen();
+}
+
+function renderBearbeitenScreen() {
+  document.getElementById("screenBearbeitenTitle").textContent = draft.name;
+  document.getElementById("toggleAlleBtn").textContent = draft.alleAnzeigen ? "Nur passende Artikel anzeigen" : "Weitere Artikel anzeigen";
+
+  const container = document.getElementById("bearbeitenListContainer");
+  let html = "";
+
+  state.kategorien.forEach(function (kat) {
+    const rowsInKat = draft.rows.filter(function (r) {
+      const a = state.artikel.find(function (x) { return x.id === r.artikelId; });
+      return a && a.kategorie === kat;
+    });
+    if (rowsInKat.length === 0) return;
+
+    rowsInKat.sort(function (a, b) {
+      if (a.selected !== b.selected) return a.selected ? -1 : 1;
+      const an = state.artikel.find(function (x) { return x.id === a.artikelId; });
+      const bn = state.artikel.find(function (x) { return x.id === b.artikelId; });
+      return (an ? an.name : "").localeCompare(bn ? bn.name : "");
+    });
+
+    html += '<div class="section-header">' + escapeHtml(kat) + '</div><div class="grouped-list">';
+    rowsInKat.forEach(function (r) { html += renderItemRowHtml(r); });
+    html += '</div>';
+  });
+
+  if (draft.rows.length === 0) {
+    html = '<div class="empty-hint">Keine passenden Artikel gefunden.</div>';
+  }
+  container.innerHTML = html;
+
+  attachBearbeitenRowEvents();
+  updateBearbeitenFooter();
+}
+
+function renderItemRowHtml(r) {
+  const a = state.artikel.find(function (x) { return x.id === r.artikelId; });
+  if (!a) return "";
+  const gewichtGesamt = a.gewicht * (r.anzahl || 0);
+
+  let html = '<div class="item-row" data-rowid="' + r.rowId + '">' +
+      '<div class="item-row-top" data-toggle="' + r.rowId + '">' +
+        '<div class="circle-toggle ' + (r.selected ? "checked" : "") + '">' + (r.selected ? "✓" : "") + '</div>' +
+        '<div class="item-row-info">' +
+          '<div class="item-row-name">' + escapeHtml(a.name) + '</div>' +
+          '<div class="item-row-sub">' + a.gewicht + ' g/Stk · ' + escapeHtml(a.lagerort || "-") + '</div>' +
+        '</div>' +
+        '<div class="item-row-weight">' + (r.selected ? formatKg(gewichtGesamt) + " kg" : "") + '</div>' +
+      '</div>';
+
+  if (r.selected) {
+    html += '<div class="item-row-controls">' +
+        '<div class="stepper">' +
+          '<button data-dec="' + r.rowId + '">–</button>' +
+          '<div class="stepper-value">' + r.anzahl + '</div>' +
+          '<button data-inc="' + r.rowId + '">+</button>' +
+        '</div>' +
+        '<select class="mini-select" data-gepaeck="' + r.rowId + '">' +
+          '<option value="">– Gepäckstück –</option>' +
+          state.gepaeckstuecke.map(function (g) {
+            return '<option value="' + escapeHtml(g) + '" ' + (g === r.gepaeckstueck ? "selected" : "") + '>' + escapeHtml(g) + '</option>';
+          }).join("") +
+        '</select>' +
+        '<button class="dup-btn" data-dup="' + r.rowId + '" title="Aufteilen">⧉</button>' +
+      '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function attachBearbeitenRowEvents() {
+  const container = document.getElementById("bearbeitenListContainer");
+
+  container.querySelectorAll("[data-toggle]").forEach(function (el) {
+    el.addEventListener("click", function () {
+      const id = parseInt(el.dataset.toggle);
+      const r = draft.rows.find(function (x) { return x.rowId === id; });
+      r.selected = !r.selected;
+      draft.dirty = true;
+      renderBearbeitenScreen();
+    });
+  });
+
+  container.querySelectorAll("[data-inc]").forEach(function (el) {
+    el.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const id = parseInt(el.dataset.inc);
+      const r = draft.rows.find(function (x) { return x.rowId === id; });
+      r.anzahl = (r.anzahl || 0) + 1;
+      draft.dirty = true;
+      renderBearbeitenScreen();
+    });
+  });
+
+  container.querySelectorAll("[data-dec]").forEach(function (el) {
+    el.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const id = parseInt(el.dataset.dec);
+      const r = draft.rows.find(function (x) { return x.rowId === id; });
+      if (r.anzahl > 1) r.anzahl--;
+      draft.dirty = true;
+      renderBearbeitenScreen();
+    });
+  });
+
+  container.querySelectorAll("[data-gepaeck]").forEach(function (el) {
+    el.addEventListener("click", function (e) { e.stopPropagation(); });
+    el.addEventListener("change", function () {
+      const id = parseInt(el.dataset.gepaeck);
+      const r = draft.rows.find(function (x) { return x.rowId === id; });
+      r.gepaeckstueck = el.value;
+      draft.dirty = true;
+    });
+  });
+
+  container.querySelectorAll("[data-dup]").forEach(function (el) {
+    el.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const id = parseInt(el.dataset.dup);
+      const orig = draft.rows.find(function (x) { return x.rowId === id; });
+      const neu = { rowId: draft.nextRowId++, artikelId: orig.artikelId, selected: true, anzahl: 1, gepaeckstueck: "", anzahlGepackt: 0 };
+      const idx = draft.rows.indexOf(orig);
+      draft.rows.splice(idx + 1, 0, neu);
+      draft.dirty = true;
+      renderBearbeitenScreen();
+    });
+  });
+}
+
+function updateBearbeitenFooter() {
+  const selectedRows = draft.rows.filter(function (r) { return r.selected; });
+  const gesamtG = selectedRows.reduce(function (sum, r) {
+    const a = state.artikel.find(function (x) { return x.id === r.artikelId; });
+    return sum + (a ? a.gewicht : 0) * (r.anzahl || 0);
+  }, 0);
+  document.getElementById("bearbeitenFooterSummary").textContent = selectedRows.length + " Artikel ausgewählt · " + formatKg(gesamtG) + " kg geplant";
+}
+
+function backFromBearbeiten() {
+  if (draft && draft.dirty) {
+    const ok = confirm("Es gibt nicht gespeicherte Änderungen. Trotzdem verwerfen?");
+    if (!ok) return;
+  }
+  popScreen();
+  renderPacklistenTab();
+  renderStartTab();
+}
+
+function speichereBearbeitung(weiterZuPacken) {
+  const selectedRows = draft.rows.filter(function (r) { return r.selected; });
+  if (selectedRows.length === 0) { alert("Bitte mindestens einen Artikel auswählen."); return; }
+
+  let packliste;
+  if (draft.packlisteId) {
+    packliste = state.packlisten.find(function (x) { return x.id === draft.packlisteId; });
+    packliste.name = draft.name;
+    packliste.urlaubstypen = draft.urlaubstypen;
+  } else {
+    packliste = { id: nextPacklisteId++, name: draft.name, urlaubstypen: draft.urlaubstypen, items: [], erstellt: new Date().toISOString() };
+    state.packlisten.push(packliste);
+    draft.packlisteId = packliste.id;
+  }
+
+  packliste.items = selectedRows.map(function (r) {
+    return {
+      id: r.rowId, artikelId: r.artikelId, anzahl: r.anzahl || 1,
+      gepaeckstueck: r.gepaeckstueck, anzahlGepackt: Math.min(r.anzahlGepackt || 0, r.anzahl || 1)
+    };
+  });
+  packliste.geaendert = new Date().toISOString();
+  draft.dirty = false;
+
+  renderPacklistenTab();
+  renderStartTab();
+
+  if (weiterZuPacken) {
+    openPackenReplace(packliste.id);
+  } else {
+    alert('Packliste "' + packliste.name + '" wurde gespeichert.');
+  }
+}
+
+// ================= PACKEN (Schritt 5+6) =================
+
+function openPacken(id) {
+  currentPackenListeId = id;
+  renderPackenScreen();
+  showScreen("screen-packen");
+}
+
+function openPackenReplace(id) {
+  currentPackenListeId = id;
+  renderPackenScreen();
+  replaceScreen("screen-packen");
+}
+
+function renderPackenScreen() {
+  const p = state.packlisten.find(function (x) { return x.id === currentPackenListeId; });
+  if (!p) return;
+  document.getElementById("screenPackenTitle").textContent = "Packen: " + p.name;
+
+  const container = document.getElementById("packenListContainer");
+  let html = "";
+
+  const orderedLagerorte = state.lagerorte.filter(function (l) {
+    return p.items.some(function (it) {
+      const a = state.artikel.find(function (x) { return x.id === it.artikelId; });
+      return a && a.lagerort === l;
+    });
+  });
+
+  // Lagerorte, die nicht in der Grundliste stehen (z.B. gelöscht), trotzdem anzeigen
+  const bekannteLagerorte = {};
+  orderedLagerorte.forEach(function (l) { bekannteLagerorte[l] = true; });
+  p.items.forEach(function (it) {
+    const a = state.artikel.find(function (x) { return x.id === it.artikelId; });
+    const l = a ? a.lagerort : "Unbekannt";
+    if (!bekannteLagerorte[l]) { orderedLagerorte.push(l); bekannteLagerorte[l] = true; }
+  });
+
+  orderedLagerorte.forEach(function (lager) {
+    const itemsLager = p.items.filter(function (it) {
+      const a = state.artikel.find(function (x) { return x.id === it.artikelId; });
+      return a && a.lagerort === lager;
+    });
+    if (itemsLager.length === 0) return;
+
+    html += '<div class="section-header">' + escapeHtml(lager) + '</div>';
+
+    const gepGroups = {};
+    itemsLager.forEach(function (it) {
+      const g = it.gepaeckstueck || "(ohne Gepäckstück)";
+      if (!gepGroups[g]) gepGroups[g] = [];
+      gepGroups[g].push(it);
+    });
+
+    Object.keys(gepGroups).sort().forEach(function (gep) {
+      html += '<div class="gepaeck-subheader">' + escapeHtml(gep) + '</div><div class="grouped-list" style="margin-bottom:10px;">';
+      gepGroups[gep].sort(function (a, b) {
+        const aa = state.artikel.find(function (x) { return x.id === a.artikelId; });
+        const bb = state.artikel.find(function (x) { return x.id === b.artikelId; });
+        const ak = aa ? aa.kategorie : "", bk = bb ? bb.kategorie : "";
+        if (ak !== bk) return ak.localeCompare(bk);
+        return (aa ? aa.name : "").localeCompare(bb ? bb.name : "");
+      });
+      gepGroups[gep].forEach(function (it) { html += renderPackenRowHtml(it); });
+      html += '</div>';
+    });
+  });
+
+  container.innerHTML = html || '<div class="empty-hint">Keine Artikel in dieser Liste.</div>';
+  attachPackenRowEvents();
+  renderPackenGewicht();
+}
+
+function renderPackenRowHtml(it) {
+  const a = state.artikel.find(function (x) { return x.id === it.artikelId; });
+  const name = a ? a.name : "[Unbekannter Artikel]";
+  const voll = it.anzahl > 0 && it.anzahlGepackt >= it.anzahl;
+
+  return '<div class="item-row" data-itemid="' + it.id + '">' +
+      '<div class="item-row-top" data-pchk="' + it.id + '">' +
+        '<div class="circle-toggle ' + (voll ? "checked" : "") + '">' + (voll ? "✓" : "") + '</div>' +
+        '<div class="item-row-info">' +
+          '<div class="item-row-name">' + escapeHtml(name) + '</div>' +
+          '<div class="item-row-sub">' + it.anzahlGepackt + ' von ' + it.anzahl + ' gepackt</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="item-row-controls">' +
+        '<div class="stepper">' +
+          '<button data-pdec="' + it.id + '">–</button>' +
+          '<div class="stepper-value">' + it.anzahlGepackt + '</div>' +
+          '<button data-pinc="' + it.id + '">+</button>' +
+        '</div>' +
+        '<select class="mini-select" data-pgepaeck="' + it.id + '">' +
+          '<option value="" ' + (!it.gepaeckstueck ? "selected" : "") + '>– ohne –</option>' +
+          state.gepaeckstuecke.map(function (g) {
+            return '<option value="' + escapeHtml(g) + '" ' + (g === it.gepaeckstueck ? "selected" : "") + '>' + escapeHtml(g) + '</option>';
+          }).join("") +
+        '</select>' +
+      '</div>' +
+    '</div>';
+}
+
+function attachPackenRowEvents() {
+  const container = document.getElementById("packenListContainer");
+  const p = state.packlisten.find(function (x) { return x.id === currentPackenListeId; });
+
+  container.querySelectorAll("[data-pchk]").forEach(function (el) {
+    el.addEventListener("click", function () {
+      const id = parseInt(el.dataset.pchk);
+      const it = p.items.find(function (x) { return x.id === id; });
+      it.anzahlGepackt = (it.anzahlGepackt >= it.anzahl) ? 0 : it.anzahl;
+      renderPackenScreen();
+    });
+  });
+
+  container.querySelectorAll("[data-pinc]").forEach(function (el) {
+    el.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const id = parseInt(el.dataset.pinc);
+      const it = p.items.find(function (x) { return x.id === id; });
+      if (it.anzahlGepackt < it.anzahl) it.anzahlGepackt++;
+      renderPackenScreen();
+    });
+  });
+
+  container.querySelectorAll("[data-pdec]").forEach(function (el) {
+    el.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const id = parseInt(el.dataset.pdec);
+      const it = p.items.find(function (x) { return x.id === id; });
+      if (it.anzahlGepackt > 0) it.anzahlGepackt--;
+      renderPackenScreen();
+    });
+  });
+
+  container.querySelectorAll("[data-pgepaeck]").forEach(function (el) {
+    el.addEventListener("click", function (e) { e.stopPropagation(); });
+    el.addEventListener("change", function () {
+      const id = parseInt(el.dataset.pgepaeck);
+      const it = p.items.find(function (x) { return x.id === id; });
+      it.gepaeckstueck = el.value;
+      renderPackenScreen();
+    });
+  });
+}
+
+function renderPackenGewicht() {
+  const p = state.packlisten.find(function (x) { return x.id === currentPackenListeId; });
+  const totalGepackt = p.items.reduce(function (s, it) { return s + it.anzahlGepackt * artikelGewicht(it.artikelId); }, 0);
+  const totalGeplant = p.items.reduce(function (s, it) { return s + it.anzahl * artikelGewicht(it.artikelId); }, 0);
+  document.getElementById("packenFooterSummary").textContent = formatKg(totalGepackt) + " kg gepackt von " + formatKg(totalGeplant) + " kg geplant";
+}
+
+// ================= GEWICHTSAUSWERTUNG (Schritt 7) =================
+
+function openAuswertung() {
+  renderAuswertungScreen();
+  showScreen("screen-auswertung");
+}
+
+function renderAuswertungScreen() {
+  const p = state.packlisten.find(function (x) { return x.id === currentPackenListeId; });
+  if (!p) return;
+
+  const groups = {};
+  p.items.forEach(function (it) {
+    const g = it.gepaeckstueck || "(ohne Gepäckstück)";
+    if (!groups[g]) groups[g] = { geplant: 0, gepackt: 0 };
+    const gw = artikelGewicht(it.artikelId);
+    groups[g].geplant += it.anzahl * gw;
+    groups[g].gepackt += it.anzahlGepackt * gw;
+  });
+
+  let html = '<div class="grouped-list" style="background:none;">';
+  let totalG = 0, totalP = 0;
+
+  Object.keys(groups).sort().forEach(function (g) {
+    const d = groups[g];
+    totalG += d.geplant; totalP += d.gepackt;
+    const pct = d.geplant > 0 ? Math.min(100, Math.round((d.gepackt / d.geplant) * 100)) : 0;
+    html += '<div class="list-card" style="cursor:default;">' +
+              '<div class="list-card-title">' + escapeHtml(g) + '</div>' +
+              '<div class="list-card-sub">' + formatKg(d.gepackt) + ' kg / ' + formatKg(d.geplant) + ' kg</div>' +
+              '<div class="progress-bar"><div class="progress-fill" style="width:' + pct + '%;"></div></div>' +
+            '</div>';
+  });
+
+  const pctTotal = totalG > 0 ? Math.min(100, Math.round((totalP / totalG) * 100)) : 0;
+  html += '<div class="list-card" style="cursor:default;border:2px solid var(--color-accent);">' +
+            '<div class="list-card-title">Gesamt</div>' +
+            '<div class="list-card-sub">' + formatKg(totalP) + ' kg / ' + formatKg(totalG) + ' kg</div>' +
+            '<div class="progress-bar"><div class="progress-fill" style="width:' + pctTotal + '%;"></div></div>' +
+          '</div>';
+  html += '</div>';
+
+  document.getElementById("auswertungContainer").innerHTML = html;
 }
 </script>
 
