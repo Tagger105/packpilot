@@ -2,10 +2,13 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#F2F2F7">
+<meta name="robots" content="noindex, nofollow">
 <title>PackPilot</title>
 <style>
-/* ============ Grundvariablen (Light Mode) ============ */
 :root {
   --color-bg: #F2F2F7;
   --color-card: #FFFFFF;
@@ -38,6 +41,8 @@
 html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
+  overflow: hidden;
   background: #d9d9de;
   font-family: -apple-system, "SF Pro Text", "Segoe UI", Roboto, Arial, sans-serif;
 }
@@ -48,30 +53,38 @@ html, body {
   }
 }
 
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 #app {
+  width: 100%;
   max-width: 430px;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
   margin: 0 auto;
   background: var(--color-bg);
   position: relative;
-  overflow-x: hidden;
+  overflow: hidden;
   box-shadow: 0 0 40px rgba(0,0,0,0.15);
   display: flex;
   flex-direction: column;
 }
 
 @media (min-width: 431px) {
-  html, body {
-    padding: 24px 0;
+  #app {
+    height: 92vh;
+    max-height: 900px;
+    border-radius: 24px;
   }
 }
 
 .app-header {
   background: var(--color-header-bg);
   padding: 12px 16px 8px 16px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  flex-shrink: 0;
 }
 
 .app-header h1 {
@@ -83,7 +96,9 @@ html, body {
 
 .app-content {
   flex: 1;
-  padding: 8px 16px 90px 16px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 8px 16px 24px 16px;
 }
 
 .tab-page.hidden {
@@ -235,14 +250,12 @@ html, body {
 }
 
 .tab-bar {
-  position: sticky;
-  bottom: 0;
+  flex-shrink: 0;
   display: flex;
   background: var(--color-tabbar-bg);
   backdrop-filter: blur(20px);
   border-top: 1px solid var(--color-separator);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  z-index: 20;
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 6px);
 }
 
 .tab-btn {
