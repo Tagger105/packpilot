@@ -572,14 +572,35 @@ function renderChipsGeneric(container, options, selectedArray) {
 
 function downloadTextFile(content, filename, mime) {
   const blob = new Blob([content], { type: mime + ";charset=utf-8" });
+
+  try {
+    const file = new File([blob], filename, { type: mime });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], title: filename }).catch(function () {
+        fallbackOpenBlob(blob, filename);
+      });
+      return;
+    }
+  } catch (e) {
+    // Web Share API nicht verfügbar -> Fallback nutzen
+  }
+
+  fallbackOpenBlob(blob, filename);
+}
+
+function fallbackOpenBlob(blob, filename) {
   const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(function () { URL.revokeObjectURL(url); }, 5000);
+  const win = window.open(url, "_blank");
+  if (!win) {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.textContent = "Tippe hier, um die Datei zu speichern";
+    a.style.cssText = "position:fixed;inset:0;background:#fff;color:#007AFF;font-size:18px;display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;text-align:center;";
+    a.onclick = function () { document.body.removeChild(a); };
+    document.body.appendChild(a);
+  }
+  setTimeout(function () { URL.revokeObjectURL(url); }, 60000);
 }
 
 // ================= Screen-Navigation =================
