@@ -161,7 +161,7 @@ body {
 /* ============ Bottom Sheet ============ */
 .sheet-overlay {
   position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: flex;
-  align-items: flex-end; z-index: 50; opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+  align-items: flex-end; z-index: 70; opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
 }
 .sheet-overlay.visible { opacity: 1; pointer-events: auto; }
 .sheet {
@@ -535,10 +535,34 @@ function generateAppIcon() {
     ctx.fillStyle = grad;
     ctx.fill();
 
-    ctx.font = "108px -apple-system, sans-serif";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("🧳", 90, 100);
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.fillStyle = "#FFFFFF";
+
+    // Koffer-Griff (Bogen oben)
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    ctx.moveTo(72, 62);
+    ctx.lineTo(72, 48);
+    ctx.arcTo(72, 36, 84, 36, 6);
+    ctx.lineTo(96, 36);
+    ctx.arcTo(108, 36, 108, 48, 6);
+    ctx.lineTo(108, 62);
+    ctx.stroke();
+
+    // Koffer-Körper
+    roundRectPath(ctx, 44, 62, 92, 78, 10);
+    ctx.fill();
+
+    // Mittlere Trennlinie
+    ctx.fillStyle = "#007AFF";
+    ctx.fillRect(44, 96, 92, 6);
+
+    // Zwei kleine Verschluss-Riegel
+    ctx.fillStyle = "#FFFFFF";
+    roundRectPath(ctx, 66, 90, 10, 18, 3);
+    ctx.fill();
+    roundRectPath(ctx, 104, 90, 10, 18, 3);
+    ctx.fill();
 
     const dataUrl = canvas.toDataURL("image/png");
     const link = document.getElementById("appleTouchIcon");
@@ -546,6 +570,16 @@ function generateAppIcon() {
   } catch (e) {
     console.error("Icon konnte nicht erzeugt werden:", e);
   }
+}
+
+function roundRectPath(ctx, x, y, w, h, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.arcTo(x + w, y, x + w, y + h, radius);
+  ctx.arcTo(x + w, y + h, x, y + h, radius);
+  ctx.arcTo(x, y + h, x, y, radius);
+  ctx.arcTo(x, y, x + w, y, radius);
+  ctx.closePath();
 }
 function saveState() {
   try {
