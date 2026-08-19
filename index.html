@@ -1678,6 +1678,37 @@ function importBackup(file) {
   };
   reader.readAsText(file, "UTF-8");
 }
+function exportBackup() {
+  const data = JSON.stringify(state, null, 2);
+  const datum = new Date().toISOString().slice(0, 10);
+  downloadTextFile(data, "packpilot-backup-" + datum + ".json", "application/json");
+}
+
+function importBackup(file) {
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    let data;
+    try { data = JSON.parse(e.target.result); }
+    catch (err) { alert("Diese Datei ist keine gültige Sicherungsdatei."); return; }
+
+    if (!data || !Array.isArray(data.artikel) || !Array.isArray(data.packlisten)) {
+      alert("Diese Datei ist keine gültige PackPilot-Sicherung.");
+      return;
+    }
+    const ok = confirm("Alle aktuellen Daten werden durch die Sicherung ersetzt. Fortfahren?");
+    if (!ok) return;
+
+    Object.assign(state, data);
+    saveState();
+    befuelleAuswahlfelder();
+    renderArtikelListe();
+    renderPacklistenTab();
+    renderStartTab();
+    renderEinstellungenCounts();
+    alert("Sicherung wurde wiederhergestellt.");
+  };
+  reader.readAsText(file, "UTF-8");
+}
 </script>
 
 </body>
