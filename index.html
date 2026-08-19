@@ -247,6 +247,9 @@ body {
 .dup-btn { background: none; border: none; font-size: 18px; color: var(--color-accent); padding: 2px 4px; flex-shrink: 0; }
 
 .gepaeck-subheader { font-size: 12px; color: var(--color-text-secondary); margin: 8px 4px 4px 4px; font-weight: 600; }
+
+.config-add-row { display: flex; gap: 8px; align-items: center; }
+.config-add-row input { flex: 1; }
 </style>
 </head>
 <body>
@@ -292,17 +295,34 @@ body {
     <section class="tab-page hidden" id="tab-einstellungen">
       <div class="section-header">Stammdaten</div>
       <div class="grouped-list">
-        <div class="list-row"><div class="list-row-title">Kategorien</div><div class="chevron">›</div></div>
-        <div class="list-row"><div class="list-row-title">Urlaubstypen</div><div class="chevron">›</div></div>
-        <div class="list-row"><div class="list-row-title">Lagerorte</div><div class="chevron">›</div></div>
-        <div class="list-row"><div class="list-row-title">Gepäckstücke</div><div class="chevron">›</div></div>
+        <div class="list-row" data-config="kategorien">
+          <div class="list-row-main"><div class="list-row-title">Kategorien</div><div class="list-row-sub" id="countKategorien"></div></div>
+          <div class="chevron">›</div>
+        </div>
+        <div class="list-row" data-config="urlaubstypen">
+          <div class="list-row-main"><div class="list-row-title">Urlaubstypen</div><div class="list-row-sub" id="countUrlaubstypen"></div></div>
+          <div class="chevron">›</div>
+        </div>
+        <div class="list-row" data-config="lagerorte">
+          <div class="list-row-main"><div class="list-row-title">Lagerorte</div><div class="list-row-sub" id="countLagerorte"></div></div>
+          <div class="chevron">›</div>
+        </div>
+        <div class="list-row" data-config="gepaeckstuecke">
+          <div class="list-row-main"><div class="list-row-title">Gepäckstücke</div><div class="list-row-sub" id="countGepaeckstuecke"></div></div>
+          <div class="chevron">›</div>
+        </div>
+      </div>
+
+      <div class="section-header">Artikel-Datenbank</div>
+      <div class="grouped-list">
+        <div class="list-row" data-settings-action="csv-export"><div class="list-row-title">Artikel als CSV exportieren</div><div class="chevron">›</div></div>
+        <div class="list-row" data-settings-action="csv-import"><div class="list-row-title">Artikel aus CSV importieren</div><div class="chevron">›</div></div>
       </div>
 
       <div class="section-header">Daten &amp; Sicherung</div>
       <div class="grouped-list">
-        <div class="list-row"><div class="list-row-title">Backup erstellen</div><div class="chevron">›</div></div>
-        <div class="list-row"><div class="list-row-title">Backup wiederherstellen</div><div class="chevron">›</div></div>
-        <div class="list-row"><div class="list-row-title">Artikel aus CSV importieren</div><div class="chevron">›</div></div>
+        <div class="list-row" data-settings-action="backup-export"><div class="list-row-title">Backup erstellen</div><div class="chevron">›</div></div>
+        <div class="list-row" data-settings-action="backup-import"><div class="list-row-title">Backup wiederherstellen</div><div class="chevron">›</div></div>
       </div>
     </section>
 
@@ -322,6 +342,9 @@ body {
       <span class="tab-icon">⚙️</span><span class="tab-label">Einstellungen</span>
     </button>
   </nav>
+
+  <input type="file" id="csvFileInput" accept=".csv,text/csv" style="display:none;">
+  <input type="file" id="backupFileInput" accept=".json,application/json" style="display:none;">
 
   <!-- ============ Bottom Sheet: Artikel anlegen/bearbeiten ============ -->
   <div class="sheet-overlay" id="artikelSheetOverlay">
@@ -419,8 +442,8 @@ body {
       <div class="screen-footer">
         <div class="footer-summary" id="bearbeitenFooterSummary"></div>
         <div class="footer-buttons">
-          <button class="btn-secondary" id="bearbeitenSpeichernBtn">Speichern</button>
-          <button class="btn-primary" id="bearbeitenSpeichernPackenBtn">Speichern &amp; Packen</button>
+          <button class="btn-secondary" id="bearbeitenFertigBtn">Fertig</button>
+          <button class="btn-primary" id="bearbeitenZumPackenBtn">Zum Packen</button>
         </div>
       </div>
     </div>
@@ -445,12 +468,30 @@ body {
       <div class="screen-content" id="auswertungContainer"></div>
     </div>
 
+    <div class="screen" id="screen-konfig-liste">
+      <div class="screen-header">
+        <button class="screen-back" id="konfigBackBtn">‹ Zurück</button>
+        <div class="screen-title" id="konfigListeTitle">Liste</div>
+      </div>
+      <div class="screen-content">
+        <div class="grouped-list" id="konfigListeContainer"></div>
+        <div class="section-header">Neuer Eintrag</div>
+        <div class="grouped-list">
+          <div class="form-group config-add-row" style="border-bottom:none;">
+            <input type="text" id="konfigNeuerWert" placeholder="Name eingeben">
+            <button class="sheet-btn sheet-btn-primary" id="konfigHinzufuegenBtn">Hinzufügen</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </div>
-
 <script>
-// ================= Datenmodell (vorerst nur im Arbeitsspeicher) =================
+// ================= Datenmodell (persistiert in localStorage) =================
+
+const STORAGE_KEY = "packpilot_state_v1";
 
 const state = {
   kategorien: ["Kleidung", "Sonderkleidung", "Equipment", "Bad und Hygieneartikel", "Sonstiges", "Medizin", "Verpflegung", "Transport"],
@@ -462,16 +503,38 @@ const state = {
     { id: 2, name: "T-Shirt", kategorie: "Kleidung", gewicht: 150, lagerort: "Kleiderschrank", standardmenge: 4, urlaubstypen: ["Standard Sommer", "Meer", "Camping"], kommentar: "", status: "Aktiv" },
     { id: 3, name: "Ladekabel", kategorie: "Equipment", gewicht: 50, lagerort: "Büro", standardmenge: 1, urlaubstypen: ["Standard Sommer", "Standard Winter", "Wandern", "Meer", "Ski Fahren", "Camping", "Business"], kommentar: "", status: "Aktiv" }
   ],
-  packlisten: []
+  packlisten: [],
+  nextArtikelId: 4,
+  nextPacklisteId: 1
 };
 
-let nextArtikelId = 4;
-let nextPacklisteId = 1;
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    console.error("Speichern fehlgeschlagen:", e);
+    alert("Achtung: Die Daten konnten nicht gespeichert werden.");
+  }
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const data = JSON.parse(raw);
+      Object.assign(state, data);
+    }
+  } catch (e) {
+    console.error("Laden fehlgeschlagen:", e);
+  }
+}
+
 let aktuellBearbeiteterArtikelId = null;
 let ausgewaehlteUrlaubstypen = [];
 let neuScreenTypen = [];
 let draft = null;
 let currentPackenListeId = null;
+let currentKonfigType = null;
 let screenStack = [];
 
 // ================= Hilfsfunktionen =================
@@ -505,6 +568,18 @@ function renderChipsGeneric(container, options, selectedArray) {
       chip.classList.toggle("selected");
     });
   });
+}
+
+function downloadTextFile(content, filename, mime) {
+  const blob = new Blob([content], { type: mime + ";charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function () { URL.revokeObjectURL(url); }, 5000);
 }
 
 // ================= Screen-Navigation =================
@@ -574,6 +649,8 @@ const actionsByTab = {
 };
 
 document.addEventListener("DOMContentLoaded", function () {
+  loadState();
+
   const tabButtons = document.querySelectorAll(".tab-btn");
   const pageTitle = document.getElementById("pageTitle");
   const headerActionBtn = document.getElementById("headerActionBtn");
@@ -642,10 +719,10 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("neuWeiterBtn").addEventListener("click", packlisteNeuWeiter);
 
   // ---- Packliste Bearbeiten ----
-  document.getElementById("bearbeitenBackBtn").addEventListener("click", backFromBearbeiten);
+  document.getElementById("bearbeitenBackBtn").addEventListener("click", bearbeitenFertig);
   document.getElementById("toggleAlleBtn").addEventListener("click", toggleAlleAnzeigen);
-  document.getElementById("bearbeitenSpeichernBtn").addEventListener("click", function () { speichereBearbeitung(false); });
-  document.getElementById("bearbeitenSpeichernPackenBtn").addEventListener("click", function () { speichereBearbeitung(true); });
+  document.getElementById("bearbeitenFertigBtn").addEventListener("click", bearbeitenFertig);
+  document.getElementById("bearbeitenZumPackenBtn").addEventListener("click", bearbeitenZumPacken);
 
   // ---- Packen ----
   document.getElementById("packenBackBtn").addEventListener("click", function () {
@@ -658,10 +735,39 @@ document.addEventListener("DOMContentLoaded", function () {
   // ---- Auswertung ----
   document.getElementById("auswertungBackBtn").addEventListener("click", function () { popScreen(); });
 
+  // ---- Einstellungen / Konfiguration ----
+  document.getElementById("tab-einstellungen").addEventListener("click", function (e) {
+    const configRow = e.target.closest("[data-config]");
+    if (configRow) { openKonfigListe(configRow.dataset.config); return; }
+    const actionRow = e.target.closest("[data-settings-action]");
+    if (actionRow) {
+      const action = actionRow.dataset.settingsAction;
+      if (action === "csv-export") exportArtikelCSV();
+      else if (action === "csv-import") document.getElementById("csvFileInput").click();
+      else if (action === "backup-export") exportBackup();
+      else if (action === "backup-import") document.getElementById("backupFileInput").click();
+    }
+  });
+  document.getElementById("konfigBackBtn").addEventListener("click", function () { popScreen(); });
+  document.getElementById("konfigHinzufuegenBtn").addEventListener("click", fuegeKonfigEintragHinzu);
+  document.getElementById("konfigNeuerWert").addEventListener("keypress", function (e) {
+    if (e.key === "Enter") fuegeKonfigEintragHinzu();
+  });
+
+  document.getElementById("csvFileInput").addEventListener("change", function (e) {
+    if (e.target.files.length > 0) importArtikelCSV(e.target.files[0]);
+    e.target.value = "";
+  });
+  document.getElementById("backupFileInput").addEventListener("change", function (e) {
+    if (e.target.files.length > 0) importBackup(e.target.files[0]);
+    e.target.value = "";
+  });
+
   befuelleAuswahlfelder();
   renderArtikelListe();
   renderPacklistenTab();
   renderStartTab();
+  renderEinstellungenCounts();
 });
 
 // ================= ARTIKEL: Liste, Formular =================
@@ -767,7 +873,7 @@ function speichereArtikel() {
 
   if (aktuellBearbeiteterArtikelId === null) {
     state.artikel.push({
-      id: nextArtikelId++, name: name, kategorie: kategorie, gewicht: gewicht, lagerort: lagerort,
+      id: state.nextArtikelId++, name: name, kategorie: kategorie, gewicht: gewicht, lagerort: lagerort,
       standardmenge: standardmenge, urlaubstypen: ausgewaehlteUrlaubstypen.slice(), kommentar: kommentar, status: "Aktiv"
     });
   } else {
@@ -778,6 +884,7 @@ function speichereArtikel() {
     }
   }
 
+  saveState();
   closeArtikelSheet();
   renderArtikelListe(document.getElementById("artikelSearch").value);
 }
@@ -790,6 +897,7 @@ function loescheArtikel() {
   const a = state.artikel.find(function (x) { return x.id === aktuellBearbeiteterArtikelId; });
   if (a) a.status = "Gelöscht";
 
+  saveState();
   closeArtikelSheet();
   renderArtikelListe(document.getElementById("artikelSearch").value);
 }
@@ -859,6 +967,10 @@ function kopierePackliste(id) {
   if (!p) return;
   const neuerName = prompt("Name für die Kopie:", p.name + " (Kopie)");
   if (!neuerName || !neuerName.trim()) return;
+  if (state.packlisten.some(function (x) { return x.name.toLowerCase() === neuerName.trim().toLowerCase(); })) {
+    alert("Eine Packliste mit diesem Namen existiert bereits.");
+    return;
+  }
 
   draft = {
     packlisteId: null,
@@ -868,10 +980,13 @@ function kopierePackliste(id) {
     rows: p.items.map(function (it) {
       return { rowId: it.id, artikelId: it.artikelId, selected: true, anzahl: it.anzahl, gepaeckstueck: it.gepaeckstueck, anzahlGepackt: 0 };
     }),
-    dirty: true,
     nextRowId: (p.items.length ? Math.max.apply(null, p.items.map(function (i) { return i.id; })) : 0) + 1
   };
   ergaenzeVorschlagsZeilen();
+  syncDraftToPackliste();
+  saveState();
+  renderPacklistenTab();
+  renderStartTab();
   renderBearbeitenScreen();
   showScreen("screen-packliste-bearbeiten");
 }
@@ -880,6 +995,7 @@ function loeschePackliste(id) {
   const ok = confirm("Diese Packliste wirklich unwiderruflich löschen?");
   if (!ok) return;
   state.packlisten = state.packlisten.filter(function (x) { return x.id !== id; });
+  saveState();
   renderPacklistenTab();
   renderStartTab();
 }
@@ -902,13 +1018,13 @@ function packlisteNeuWeiter() {
     return;
   }
 
-  draft = { packlisteId: null, name: name, urlaubstypen: neuScreenTypen.slice(), alleAnzeigen: false, rows: [], dirty: false, nextRowId: 1 };
+  draft = { packlisteId: null, name: name, urlaubstypen: neuScreenTypen.slice(), alleAnzeigen: false, rows: [], nextRowId: 1 };
   ergaenzeVorschlagsZeilen();
   renderBearbeitenScreen();
   replaceScreen("screen-packliste-bearbeiten");
 }
 
-// ================= PACKLISTE BEARBEITEN (Schritt 2+3) =================
+// ================= PACKLISTE BEARBEITEN (Schritt 2+3, mit Auto-Save) =================
 
 function openPacklisteBearbeiten(packlisteId) {
   const p = state.packlisten.find(function (x) { return x.id === packlisteId; });
@@ -922,7 +1038,6 @@ function openPacklisteBearbeiten(packlisteId) {
     rows: p.items.map(function (it) {
       return { rowId: it.id, artikelId: it.artikelId, selected: true, anzahl: it.anzahl, gepaeckstueck: it.gepaeckstueck, anzahlGepackt: it.anzahlGepackt };
     }),
-    dirty: false,
     nextRowId: (p.items.length ? Math.max.apply(null, p.items.map(function (i) { return i.id; })) : 0) + 1
   };
   ergaenzeVorschlagsZeilen();
@@ -956,6 +1071,36 @@ function toggleAlleAnzeigen() {
     ergaenzeVorschlagsZeilen();
   }
   renderBearbeitenScreen();
+}
+
+// Überträgt die aktuelle Auswahl direkt in die echte, gespeicherte Packliste (Auto-Save)
+function syncDraftToPackliste() {
+  const selectedRows = draft.rows.filter(function (r) { return r.selected; });
+
+  if (!draft.packlisteId) {
+    if (selectedRows.length === 0) return; // Noch nichts ausgewählt -> noch keine Liste anlegen
+    const p = { id: state.nextPacklisteId++, name: draft.name, urlaubstypen: draft.urlaubstypen.slice(), items: [], erstellt: new Date().toISOString() };
+    state.packlisten.push(p);
+    draft.packlisteId = p.id;
+  }
+
+  const p = state.packlisten.find(function (x) { return x.id === draft.packlisteId; });
+  if (!p) return;
+
+  p.name = draft.name;
+  p.urlaubstypen = draft.urlaubstypen.slice();
+  p.items = selectedRows.map(function (r) {
+    return {
+      id: r.rowId, artikelId: r.artikelId, anzahl: r.anzahl || 1,
+      gepaeckstueck: r.gepaeckstueck, anzahlGepackt: Math.min(r.anzahlGepackt || 0, r.anzahl || 1)
+    };
+  });
+  p.geaendert = new Date().toISOString();
+}
+
+function commitDraftChange() {
+  syncDraftToPackliste();
+  saveState();
 }
 
 function renderBearbeitenScreen() {
@@ -1036,7 +1181,7 @@ function attachBearbeitenRowEvents() {
       const id = parseInt(el.dataset.toggle);
       const r = draft.rows.find(function (x) { return x.rowId === id; });
       r.selected = !r.selected;
-      draft.dirty = true;
+      commitDraftChange();
       renderBearbeitenScreen();
     });
   });
@@ -1047,7 +1192,7 @@ function attachBearbeitenRowEvents() {
       const id = parseInt(el.dataset.inc);
       const r = draft.rows.find(function (x) { return x.rowId === id; });
       r.anzahl = (r.anzahl || 0) + 1;
-      draft.dirty = true;
+      commitDraftChange();
       renderBearbeitenScreen();
     });
   });
@@ -1058,7 +1203,7 @@ function attachBearbeitenRowEvents() {
       const id = parseInt(el.dataset.dec);
       const r = draft.rows.find(function (x) { return x.rowId === id; });
       if (r.anzahl > 1) r.anzahl--;
-      draft.dirty = true;
+      commitDraftChange();
       renderBearbeitenScreen();
     });
   });
@@ -1069,7 +1214,7 @@ function attachBearbeitenRowEvents() {
       const id = parseInt(el.dataset.gepaeck);
       const r = draft.rows.find(function (x) { return x.rowId === id; });
       r.gepaeckstueck = el.value;
-      draft.dirty = true;
+      commitDraftChange();
     });
   });
 
@@ -1081,7 +1226,7 @@ function attachBearbeitenRowEvents() {
       const neu = { rowId: draft.nextRowId++, artikelId: orig.artikelId, selected: true, anzahl: 1, gepaeckstueck: "", anzahlGepackt: 0 };
       const idx = draft.rows.indexOf(orig);
       draft.rows.splice(idx + 1, 0, neu);
-      draft.dirty = true;
+      commitDraftChange();
       renderBearbeitenScreen();
     });
   });
@@ -1096,48 +1241,40 @@ function updateBearbeitenFooter() {
   document.getElementById("bearbeitenFooterSummary").textContent = selectedRows.length + " Artikel ausgewählt · " + formatKg(gesamtG) + " kg geplant";
 }
 
-function backFromBearbeiten() {
-  if (draft && draft.dirty) {
-    const ok = confirm("Es gibt nicht gespeicherte Änderungen. Trotzdem verwerfen?");
-    if (!ok) return;
+function finalizeAndDiscardIfEmpty() {
+  syncDraftToPackliste();
+  if (draft.packlisteId) {
+    const idx = state.packlisten.findIndex(function (x) { return x.id === draft.packlisteId; });
+    if (idx > -1 && state.packlisten[idx].items.length === 0) {
+      state.packlisten.splice(idx, 1);
+      draft.packlisteId = null;
+    }
   }
-  popScreen();
+  saveState();
   renderPacklistenTab();
   renderStartTab();
 }
 
-function speichereBearbeitung(weiterZuPacken) {
-  const selectedRows = draft.rows.filter(function (r) { return r.selected; });
-  if (selectedRows.length === 0) { alert("Bitte mindestens einen Artikel auswählen."); return; }
+function bearbeitenFertig() {
+  finalizeAndDiscardIfEmpty();
+  popScreen();
+}
 
-  let packliste;
-  if (draft.packlisteId) {
-    packliste = state.packlisten.find(function (x) { return x.id === draft.packlisteId; });
-    packliste.name = draft.name;
-    packliste.urlaubstypen = draft.urlaubstypen;
-  } else {
-    packliste = { id: nextPacklisteId++, name: draft.name, urlaubstypen: draft.urlaubstypen, items: [], erstellt: new Date().toISOString() };
-    state.packlisten.push(packliste);
-    draft.packlisteId = packliste.id;
+function bearbeitenZumPacken() {
+  syncDraftToPackliste();
+  if (!draft.packlisteId) {
+    alert("Bitte wähle mindestens einen Artikel aus.");
+    return;
   }
-
-  packliste.items = selectedRows.map(function (r) {
-    return {
-      id: r.rowId, artikelId: r.artikelId, anzahl: r.anzahl || 1,
-      gepaeckstueck: r.gepaeckstueck, anzahlGepackt: Math.min(r.anzahlGepackt || 0, r.anzahl || 1)
-    };
-  });
-  packliste.geaendert = new Date().toISOString();
-  draft.dirty = false;
-
+  const p = state.packlisten.find(function (x) { return x.id === draft.packlisteId; });
+  if (!p || p.items.length === 0) {
+    alert("Bitte wähle mindestens einen Artikel aus.");
+    return;
+  }
+  saveState();
   renderPacklistenTab();
   renderStartTab();
-
-  if (weiterZuPacken) {
-    openPackenReplace(packliste.id);
-  } else {
-    alert('Packliste "' + packliste.name + '" wurde gespeichert.');
-  }
+  openPackenReplace(p.id);
 }
 
 // ================= PACKEN (Schritt 5+6) =================
@@ -1169,7 +1306,6 @@ function renderPackenScreen() {
     });
   });
 
-  // Lagerorte, die nicht in der Grundliste stehen (z.B. gelöscht), trotzdem anzeigen
   const bekannteLagerorte = {};
   orderedLagerorte.forEach(function (l) { bekannteLagerorte[l] = true; });
   p.items.forEach(function (it) {
@@ -1251,6 +1387,7 @@ function attachPackenRowEvents() {
       const id = parseInt(el.dataset.pchk);
       const it = p.items.find(function (x) { return x.id === id; });
       it.anzahlGepackt = (it.anzahlGepackt >= it.anzahl) ? 0 : it.anzahl;
+      saveState();
       renderPackenScreen();
     });
   });
@@ -1261,6 +1398,7 @@ function attachPackenRowEvents() {
       const id = parseInt(el.dataset.pinc);
       const it = p.items.find(function (x) { return x.id === id; });
       if (it.anzahlGepackt < it.anzahl) it.anzahlGepackt++;
+      saveState();
       renderPackenScreen();
     });
   });
@@ -1271,6 +1409,7 @@ function attachPackenRowEvents() {
       const id = parseInt(el.dataset.pdec);
       const it = p.items.find(function (x) { return x.id === id; });
       if (it.anzahlGepackt > 0) it.anzahlGepackt--;
+      saveState();
       renderPackenScreen();
     });
   });
@@ -1281,6 +1420,7 @@ function attachPackenRowEvents() {
       const id = parseInt(el.dataset.pgepaeck);
       const it = p.items.find(function (x) { return x.id === id; });
       it.gepaeckstueck = el.value;
+      saveState();
       renderPackenScreen();
     });
   });
@@ -1336,6 +1476,199 @@ function renderAuswertungScreen() {
   html += '</div>';
 
   document.getElementById("auswertungContainer").innerHTML = html;
+}
+
+// ================= KONFIGURATION (Kategorien/Urlaubstypen/Lagerorte/Gepäckstücke) =================
+
+const konfigMeta = {
+  kategorien: {
+    title: "Kategorien", getList: function () { return state.kategorien; },
+    usageCheck: function (v) { return state.artikel.some(function (a) { return a.kategorie === v && a.status !== "Gelöscht"; }); }
+  },
+  urlaubstypen: {
+    title: "Urlaubstypen", getList: function () { return state.urlaubstypen; },
+    usageCheck: function (v) {
+      return state.artikel.some(function (a) { return a.urlaubstypen.indexOf(v) > -1; }) ||
+             state.packlisten.some(function (p) { return p.urlaubstypen.indexOf(v) > -1; });
+    }
+  },
+  lagerorte: {
+    title: "Lagerorte", getList: function () { return state.lagerorte; },
+    usageCheck: function (v) { return state.artikel.some(function (a) { return a.lagerort === v; }); }
+  },
+  gepaeckstuecke: {
+    title: "Gepäckstücke", getList: function () { return state.gepaeckstuecke; },
+    usageCheck: function (v) { return state.packlisten.some(function (p) { return p.items.some(function (it) { return it.gepaeckstueck === v; }); }); }
+  }
+};
+
+function openKonfigListe(type) {
+  currentKonfigType = type;
+  document.getElementById("konfigListeTitle").textContent = konfigMeta[type].title;
+  document.getElementById("konfigNeuerWert").value = "";
+  renderKonfigListe();
+  showScreen("screen-konfig-liste");
+}
+
+function renderKonfigListe() {
+  const meta = konfigMeta[currentKonfigType];
+  const liste = meta.getList();
+  const container = document.getElementById("konfigListeContainer");
+  if (liste.length === 0) {
+    container.innerHTML = '<div class="list-row"><div class="list-row-title" style="color:var(--color-text-secondary);">Noch keine Einträge</div></div>';
+    return;
+  }
+  container.innerHTML = liste.map(function (val, idx) {
+    return '<div class="list-row"><div class="list-row-main"><div class="list-row-title">' + escapeHtml(val) + '</div></div>' +
+           '<button class="row-more-btn" data-konfigdel="' + idx + '" style="color:var(--color-danger);font-size:22px;">×</button></div>';
+  }).join("");
+
+  container.querySelectorAll("[data-konfigdel]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      loescheKonfigEintrag(parseInt(btn.dataset.konfigdel));
+    });
+  });
+}
+
+function loescheKonfigEintrag(idx) {
+  const meta = konfigMeta[currentKonfigType];
+  const liste = meta.getList();
+  const val = liste[idx];
+  const genutzt = meta.usageCheck(val);
+  const msg = genutzt ? "'" + val + "' wird noch verwendet. Trotzdem löschen?" : "'" + val + "' wirklich löschen?";
+  if (!confirm(msg)) return;
+  liste.splice(idx, 1);
+  saveState();
+  befuelleAuswahlfelder();
+  renderKonfigListe();
+  renderEinstellungenCounts();
+}
+
+function fuegeKonfigEintragHinzu() {
+  const input = document.getElementById("konfigNeuerWert");
+  const val = input.value.trim();
+  if (!val) return;
+  const meta = konfigMeta[currentKonfigType];
+  const liste = meta.getList();
+  if (liste.some(function (x) { return x.toLowerCase() === val.toLowerCase(); })) {
+    alert("Dieser Eintrag existiert bereits.");
+    return;
+  }
+  liste.push(val);
+  input.value = "";
+  saveState();
+  befuelleAuswahlfelder();
+  renderKonfigListe();
+  renderEinstellungenCounts();
+}
+
+function renderEinstellungenCounts() {
+  document.getElementById("countKategorien").textContent = state.kategorien.length + " Einträge";
+  document.getElementById("countUrlaubstypen").textContent = state.urlaubstypen.length + " Einträge";
+  document.getElementById("countLagerorte").textContent = state.lagerorte.length + " Einträge";
+  document.getElementById("countGepaeckstuecke").textContent = state.gepaeckstuecke.length + " Einträge";
+}
+
+// ================= CSV-Export/Import (Artikel) =================
+
+function csvEscape(value) {
+  let s = (value === undefined || value === null) ? "" : String(value);
+  s = s.replace(/,/g, ";");
+  s = s.replace(/
+$$
+\r\n
+$$
++/g, " ");
+  return s;
+}
+
+function exportArtikelCSV() {
+  const header = ["Artikelname", "Kategorie", "Gewicht_g", "Lagerort", "Standardmenge", "Urlaubstypen", "Kommentar", "Status"];
+  const lines = [header.join(",")];
+  state.artikel.forEach(function (a) {
+    const row = [
+      csvEscape(a.name), csvEscape(a.kategorie), csvEscape(a.gewicht), csvEscape(a.lagerort),
+      csvEscape(a.standardmenge), csvEscape(a.urlaubstypen.join(";")), csvEscape(a.kommentar), csvEscape(a.status)
+    ];
+    lines.push(row.join(","));
+  });
+  downloadTextFile(lines.join("\n"), "packpilot-artikel.csv", "text/csv");
+}
+
+function importArtikelCSV(file) {
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const text = e.target.result;
+    const lines = text.split(/\r?\n/).filter(function (l) { return l.trim().length > 0; });
+    if (lines.length < 2) { alert("Die CSV-Datei enthält keine Datenzeilen."); return; }
+
+    let importiert = 0;
+    for (let i = 1; i < lines.length; i++) {
+      const cols = lines[i].split(",");
+      const name = (cols[0] || "").trim();
+      if (!name) continue;
+
+      const kategorie = (cols[1] || "").trim() || state.kategorien[0];
+      const gewicht = parseFloat(cols[2]) || 0;
+      const lagerort = (cols[3] || "").trim() || state.lagerorte[0];
+      const standardmenge = parseFloat(cols[4]) || 1;
+      const urlaubstypen = (cols[5] || "").split(";").map(function (s) { return s.trim(); }).filter(Boolean);
+      const kommentar = (cols[6] || "").trim();
+      const status = (cols[7] || "Aktiv").trim();
+
+      if (state.kategorien.indexOf(kategorie) === -1) state.kategorien.push(kategorie);
+      if (state.lagerorte.indexOf(lagerort) === -1) state.lagerorte.push(lagerort);
+      urlaubstypen.forEach(function (t) { if (state.urlaubstypen.indexOf(t) === -1) state.urlaubstypen.push(t); });
+
+      state.artikel.push({
+        id: state.nextArtikelId++, name: name, kategorie: kategorie, gewicht: gewicht, lagerort: lagerort,
+        standardmenge: standardmenge, urlaubstypen: urlaubstypen.length ? urlaubstypen : [state.urlaubstypen[0]],
+        kommentar: kommentar, status: status === "Gelöscht" ? "Gelöscht" : "Aktiv"
+      });
+      importiert++;
+    }
+
+    saveState();
+    befuelleAuswahlfelder();
+    renderArtikelListe();
+    renderEinstellungenCounts();
+    alert(importiert + " Artikel wurden importiert.");
+  };
+  reader.readAsText(file, "UTF-8");
+}
+
+// ================= Backup Export/Import =================
+
+function exportBackup() {
+  const data = JSON.stringify(state, null, 2);
+  const datum = new Date().toISOString().slice(0, 10);
+  downloadTextFile(data, "packpilot-backup-" + datum + ".json", "application/json");
+}
+
+function importBackup(file) {
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    let data;
+    try { data = JSON.parse(e.target.result); }
+    catch (err) { alert("Diese Datei ist keine gültige Sicherungsdatei."); return; }
+
+    if (!data || !Array.isArray(data.artikel) || !Array.isArray(data.packlisten)) {
+      alert("Diese Datei ist keine gültige PackPilot-Sicherung.");
+      return;
+    }
+    const ok = confirm("Alle aktuellen Daten werden durch die Sicherung ersetzt. Fortfahren?");
+    if (!ok) return;
+
+    Object.assign(state, data);
+    saveState();
+    befuelleAuswahlfelder();
+    renderArtikelListe();
+    renderPacklistenTab();
+    renderStartTab();
+    renderEinstellungenCounts();
+    alert("Sicherung wurde wiederhergestellt.");
+  };
+  reader.readAsText(file, "UTF-8");
 }
 </script>
 
