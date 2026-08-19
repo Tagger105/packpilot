@@ -1636,12 +1636,6 @@ const lines = text.split("\n").map(function (l) { return l.replace("\r", ""); })
 
 // ================= Backup Export/Import =================
 
-function exportBackup() {
-  const data = JSON.stringify(state, null, 2);
-  const datum = new Date().toISOString().slice(0, 10);
-  downloadTextFile(data, "packpilot-backup-" + datum + ".json", "application/json");
-}
-
 function importBackup(file) {
   const reader = new FileReader();
   reader.onload = function (e) {
@@ -1649,10 +1643,27 @@ function importBackup(file) {
     try { data = JSON.parse(e.target.result); }
     catch (err) { alert("Diese Datei ist keine gültige Sicherungsdatei."); return; }
 
-    if (!data || !Array.isArray(data.artikel) || !Array.isArray(data.packlisten)) {
+    if (!data || typeof data !== "object") {
       alert("Diese Datei ist keine gültige PackPilot-Sicherung.");
       return;
     }
+    if (!Array.isArray(data.artikel) || !Array.isArray(data.packlisten) ||
+        !Array.isArray(data.kategorien) || !Array.isArray(data.urlaubstypen) ||
+        !Array.isArray(data.lagerorte) || !Array.isArray(data.gepaeckstuecke)) {
+      alert("Diese Datei ist keine gültige PackPilot-Sicherung (Struktur passt nicht).");
+      return;
+    }
+
+    const artikelOk = data.artikel.every(function (a) {
+      return a && typeof a.id === "number" && typeof a.name === "string" &&
+             typeof a.kategorie === "string" && typeof a.gewicht === "number" &&
+             Array.isArray(a.urlaubstypen);
+    });
+    if (!artikelOk) {
+      alert("Diese Datei enthält ungültige Artikeldaten und wurde nicht importiert.");
+      return;
+    }
+
     const ok = confirm("Alle aktuellen Daten werden durch die Sicherung ersetzt. Fortfahren?");
     if (!ok) return;
 
