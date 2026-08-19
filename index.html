@@ -1573,12 +1573,9 @@ function renderEinstellungenCounts() {
 
 function csvEscape(value) {
   let s = (value === undefined || value === null) ? "" : String(value);
-  s = s.replace(/,/g, ";");
-  s = s.replace(/
-$$
-\r\n
-$$
-+/g, " ");
+  s = s.split(",").join(";");
+  s = s.split("\r").join(" ");
+  s = s.split("\n").join(" ");
   return s;
 }
 
@@ -1599,7 +1596,7 @@ function importArtikelCSV(file) {
   const reader = new FileReader();
   reader.onload = function (e) {
     const text = e.target.result;
-    const lines = text.split(/\r?\n/).filter(function (l) { return l.trim().length > 0; });
+const lines = text.split("\n").map(function (l) { return l.replace("\r", ""); }).filter(function (l) { return l.trim().length > 0; });
     if (lines.length < 2) { alert("Die CSV-Datei enthält keine Datenzeilen."); return; }
 
     let importiert = 0;
