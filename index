@@ -7,6 +7,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#F2F2F7">
 <meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-title" content="PackPilot">
+<link rel="apple-touch-icon" id="appleTouchIcon" href="">
 <title>PackPilot</title>
 <style>
 :root {
@@ -206,9 +208,10 @@ body {
   border-bottom: 1px solid var(--color-separator); flex-shrink: 0; background: var(--color-header-bg);
 }
 .screen-back { position: relative; z-index: 2; background: none; border: none; color: var(--color-accent); font-size: 16px; padding: 6px; max-width: 40%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.screen-action { position: relative; z-index: 2; background: none; border: none; color: var(--color-accent); font-size: 20px; padding: 6px; margin-left: auto; }
+.screen-action { position: relative; z-index: 2; background: none; border: none; color: var(--color-accent); font-size: 20px; padding: 6px; }
+.screen-header-actions { position: relative; z-index: 2; display: flex; align-items: center; gap: 2px; margin-left: auto; }
 .screen-title {
-  position: absolute; left: 60px; right: 60px; text-align: center; font-size: 16px; font-weight: 600;
+  position: absolute; left: 60px; right: 92px; text-align: center; font-size: 16px; font-weight: 600;
   color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
@@ -448,11 +451,14 @@ body {
       </div>
     </div>
 
-    <div class="screen" id="screen-packen">
+     <div class="screen" id="screen-packen">
       <div class="screen-header">
         <button class="screen-back" id="packenBackBtn">‹ Zurück</button>
         <div class="screen-title" id="screenPackenTitle">Packen</div>
-        <button class="screen-action" id="packenAuswertungBtn">⚖️</button>
+        <div class="screen-header-actions">
+          <button class="screen-action" id="packenSortBtn">⇅</button>
+          <button class="screen-action" id="packenAuswertungBtn">⚖️</button>
+        </div>
       </div>
       <div class="screen-content" id="packenListContainer"></div>
       <div class="screen-footer">
@@ -507,7 +513,40 @@ const state = {
   nextArtikelId: 4,
   nextPacklisteId: 1
 };
+function generateAppIcon() {
+  try {
+    const canvas = document.createElement("canvas");
+    canvas.width = 180;
+    canvas.height = 180;
+    const ctx = canvas.getContext("2d");
 
+    const r = 36;
+    ctx.beginPath();
+    ctx.moveTo(r, 0);
+    ctx.arcTo(180, 0, 180, 180, r);
+    ctx.arcTo(180, 180, 0, 180, r);
+    ctx.arcTo(0, 180, 0, 0, r);
+    ctx.arcTo(0, 0, 180, 0, r);
+    ctx.closePath();
+
+    const grad = ctx.createLinearGradient(0, 0, 180, 180);
+    grad.addColorStop(0, "#5AC8FA");
+    grad.addColorStop(1, "#007AFF");
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    ctx.font = "108px -apple-system, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("🧳", 90, 100);
+
+    const dataUrl = canvas.toDataURL("image/png");
+    const link = document.getElementById("appleTouchIcon");
+    if (link) link.href = dataUrl;
+  } catch (e) {
+    console.error("Icon konnte nicht erzeugt werden:", e);
+  }
+}
 function saveState() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -535,6 +574,7 @@ let neuScreenTypen = [];
 let draft = null;
 let currentPackenListeId = null;
 let currentKonfigType = null;
+let packenSortMode = "lagerort";
 let screenStack = [];
 
 // ================= Hilfsfunktionen =================
@@ -670,6 +710,7 @@ const actionsByTab = {
 };
 
 document.addEventListener("DOMContentLoaded", function () {
+  generateAppIcon();
   loadState();
 
   const tabButtons = document.querySelectorAll(".tab-btn");
@@ -752,6 +793,15 @@ document.addEventListener("DOMContentLoaded", function () {
     renderStartTab();
   });
   document.getElementById("packenAuswertungBtn").addEventListener("click", openAuswertung);
+  document.getElementById("packenSortBtn").addEventListener("click", function () {
+    showActionSheet("Sortierung", [
+      { label: "Lagerort" + (packenSortMode === "lagerort" ? " ✓" : ""), onClick: function () { packenSortMode = "lagerort"; renderPackenScreen(); } },
+      { label: "Gepäckstück" + (packenSortMode === "gepaeckstueck" ? " ✓" : ""), onClick: function () { packenSortMode = "gepaeckstueck"; renderPackenScreen(); } },
+      { label: "Kategorie" + (packenSortMode === "kategorie" ? " ✓" : ""), onClick: function () { packenSortMode = "kategorie"; renderPackenScreen(); } },
+      { label: "Alphabetisch" + (packenSortMode === "alphabetisch" ? " ✓" : ""), onClick: function () { packenSortMode = "alphabetisch"; renderPackenScreen(); } },
+      { label: "Ungepackt zuerst" + (packenSortMode === "ungepackt" ? " ✓" : ""), onClick: function () { packenSortMode = "ungepackt"; renderPackenScreen(); } }
+    ]);
+  });
 
   // ---- Auswertung ----
   document.getElementById("auswertungBackBtn").addEventListener("click", function () { popScreen(); });
@@ -1312,6 +1362,16 @@ function openPackenReplace(id) {
   replaceScreen("screen-packen");
 }
 
+function getItemInfo(it) {
+  const a = state.artikel.find(function (x) { return x.id === it.artikelId; });
+  return {
+    artikel: a,
+    name: a ? a.name : "[Unbekannter Artikel]",
+    kategorie: a ? a.kategorie : "",
+    lagerort: a ? a.lagerort : "Unbekannt"
+  };
+}
+
 function renderPackenScreen() {
   const p = state.packlisten.find(function (x) { return x.id === currentPackenListeId; });
   if (!p) return;
@@ -1320,50 +1380,103 @@ function renderPackenScreen() {
   const container = document.getElementById("packenListContainer");
   let html = "";
 
-  const orderedLagerorte = state.lagerorte.filter(function (l) {
-    return p.items.some(function (it) {
-      const a = state.artikel.find(function (x) { return x.id === it.artikelId; });
-      return a && a.lagerort === l;
+  if (packenSortMode === "lagerort") {
+    const orderedLagerorte = state.lagerorte.filter(function (l) {
+      return p.items.some(function (it) { return getItemInfo(it).lagerort === l; });
     });
-  });
-
-  const bekannteLagerorte = {};
-  orderedLagerorte.forEach(function (l) { bekannteLagerorte[l] = true; });
-  p.items.forEach(function (it) {
-    const a = state.artikel.find(function (x) { return x.id === it.artikelId; });
-    const l = a ? a.lagerort : "Unbekannt";
-    if (!bekannteLagerorte[l]) { orderedLagerorte.push(l); bekannteLagerorte[l] = true; }
-  });
-
-  orderedLagerorte.forEach(function (lager) {
-    const itemsLager = p.items.filter(function (it) {
-      const a = state.artikel.find(function (x) { return x.id === it.artikelId; });
-      return a && a.lagerort === lager;
-    });
-    if (itemsLager.length === 0) return;
-
-    html += '<div class="section-header">' + escapeHtml(lager) + '</div>';
-
-    const gepGroups = {};
-    itemsLager.forEach(function (it) {
-      const g = it.gepaeckstueck || "(ohne Gepäckstück)";
-      if (!gepGroups[g]) gepGroups[g] = [];
-      gepGroups[g].push(it);
+    const bekannt = {};
+    orderedLagerorte.forEach(function (l) { bekannt[l] = true; });
+    p.items.forEach(function (it) {
+      const l = getItemInfo(it).lagerort;
+      if (!bekannt[l]) { orderedLagerorte.push(l); bekannt[l] = true; }
     });
 
-    Object.keys(gepGroups).sort().forEach(function (gep) {
-      html += '<div class="gepaeck-subheader">' + escapeHtml(gep) + '</div><div class="grouped-list" style="margin-bottom:10px;">';
-      gepGroups[gep].sort(function (a, b) {
-        const aa = state.artikel.find(function (x) { return x.id === a.artikelId; });
-        const bb = state.artikel.find(function (x) { return x.id === b.artikelId; });
-        const ak = aa ? aa.kategorie : "", bk = bb ? bb.kategorie : "";
-        if (ak !== bk) return ak.localeCompare(bk);
-        return (aa ? aa.name : "").localeCompare(bb ? bb.name : "");
+    orderedLagerorte.forEach(function (lager) {
+      const itemsLager = p.items.filter(function (it) { return getItemInfo(it).lagerort === lager; });
+      if (itemsLager.length === 0) return;
+
+      html += '<div class="section-header">' + escapeHtml(lager) + '</div>';
+
+      const gepGroups = {};
+      itemsLager.forEach(function (it) {
+        const g = it.gepaeckstueck || "(ohne Gepäckstück)";
+        if (!gepGroups[g]) gepGroups[g] = [];
+        gepGroups[g].push(it);
       });
-      gepGroups[gep].forEach(function (it) { html += renderPackenRowHtml(it); });
+
+      Object.keys(gepGroups).sort().forEach(function (gep) {
+        html += '<div class="gepaeck-subheader">' + escapeHtml(gep) + '</div><div class="grouped-list" style="margin-bottom:10px;">';
+        gepGroups[gep].sort(function (a, b) {
+          const ai = getItemInfo(a), bi = getItemInfo(b);
+          if (ai.kategorie !== bi.kategorie) return ai.kategorie.localeCompare(bi.kategorie);
+          return ai.name.localeCompare(bi.name);
+        });
+        gepGroups[gep].forEach(function (it) { html += renderPackenRowHtml(it); });
+        html += '</div>';
+      });
+    });
+
+  } else if (packenSortMode === "gepaeckstueck") {
+    const orderedGep = state.gepaeckstuecke.slice();
+    const bekannt = {};
+    orderedGep.forEach(function (g) { bekannt[g] = true; });
+    p.items.forEach(function (it) {
+      const g = it.gepaeckstueck || "(ohne Gepäckstück)";
+      if (!bekannt[g]) { orderedGep.push(g); bekannt[g] = true; }
+    });
+
+    orderedGep.forEach(function (gep) {
+      const itemsGep = p.items.filter(function (it) { return (it.gepaeckstueck || "(ohne Gepäckstück)") === gep; });
+      if (itemsGep.length === 0) return;
+
+      html += '<div class="section-header">' + escapeHtml(gep) + '</div><div class="grouped-list" style="margin-bottom:10px;">';
+      itemsGep.sort(function (a, b) {
+        const ai = getItemInfo(a), bi = getItemInfo(b);
+        if (ai.kategorie !== bi.kategorie) return ai.kategorie.localeCompare(bi.kategorie);
+        return ai.name.localeCompare(bi.name);
+      });
+      itemsGep.forEach(function (it) { html += renderPackenRowHtml(it); });
       html += '</div>';
     });
-  });
+
+  } else if (packenSortMode === "kategorie") {
+    const orderedKat = state.kategorien.slice();
+    const bekannt = {};
+    orderedKat.forEach(function (k) { bekannt[k] = true; });
+    p.items.forEach(function (it) {
+      const k = getItemInfo(it).kategorie;
+      if (!bekannt[k]) { orderedKat.push(k); bekannt[k] = true; }
+    });
+
+    orderedKat.forEach(function (kat) {
+      const itemsKat = p.items.filter(function (it) { return getItemInfo(it).kategorie === kat; });
+      if (itemsKat.length === 0) return;
+
+      html += '<div class="section-header">' + escapeHtml(kat) + '</div><div class="grouped-list" style="margin-bottom:10px;">';
+      itemsKat.sort(function (a, b) { return getItemInfo(a).name.localeCompare(getItemInfo(b).name); });
+      itemsKat.forEach(function (it) { html += renderPackenRowHtml(it); });
+      html += '</div>';
+    });
+
+  } else if (packenSortMode === "alphabetisch") {
+    const itemsAll = p.items.slice().sort(function (a, b) {
+      return getItemInfo(a).name.localeCompare(getItemInfo(b).name);
+    });
+    html += '<div class="grouped-list" style="margin-bottom:10px;">';
+    itemsAll.forEach(function (it) { html += renderPackenRowHtml(it); });
+    html += '</div>';
+
+  } else if (packenSortMode === "ungepackt") {
+    const itemsAll = p.items.slice().sort(function (a, b) {
+      const af = (a.anzahl > 0 && a.anzahlGepackt >= a.anzahl) ? 1 : 0;
+      const bf = (b.anzahl > 0 && b.anzahlGepackt >= b.anzahl) ? 1 : 0;
+      if (af !== bf) return af - bf;
+      return getItemInfo(a).name.localeCompare(getItemInfo(b).name);
+    });
+    html += '<div class="grouped-list" style="margin-bottom:10px;">';
+    itemsAll.forEach(function (it) { html += renderPackenRowHtml(it); });
+    html += '</div>';
+  }
 
   container.innerHTML = html || '<div class="empty-hint">Keine Artikel in dieser Liste.</div>';
   attachPackenRowEvents();
