@@ -166,7 +166,8 @@ body { display: flex; align-items: center; justify-content: center; }
 
 .config-add-row { display: flex; gap: 8px; align-items: center; }
 .config-add-row input { flex: 1; }
-  .onboarding-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 90; display: flex; align-items: center; justify-content: center; padding: 20px; }
+
+.onboarding-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 90; display: flex; align-items: center; justify-content: center; padding: 20px; }
 .onboarding-overlay.hide-el { display: none; }
 .onboarding-card { background: var(--color-card); border-radius: 18px; padding: 24px 20px; max-height: 85%; overflow-y: auto; }
 .onboarding-icon { font-size: 40px; text-align: center; margin-bottom: 8px; }
@@ -405,7 +406,8 @@ body { display: flex; align-items: center; justify-content: center; }
     </div>
 
   </div>
- <div class="onboarding-overlay hide-el" id="onboardingOverlay">
+
+  <div class="onboarding-overlay hide-el" id="onboardingOverlay">
     <div class="onboarding-card">
       <div class="onboarding-icon">🧳</div>
       <div class="onboarding-title">Willkommen bei PackPilot!</div>
@@ -419,7 +421,7 @@ body { display: flex; align-items: center; justify-content: center; }
       <button class="btn-primary" id="onboardingCloseBtn" style="width:100%;margin-top:8px;">Los geht's</button>
     </div>
   </div>
-  
+
 </div>
 <script>
 // ================= Datenmodell (persistiert in localStorage) =================
@@ -487,7 +489,7 @@ let currentPackenListeId = null;
 let currentKonfigType = null;
 let screenStack = [];
 let packenSortMode = "lagerort";
-  const FIXED_GEPAECK_OPTIONS = ["Separat"];
+const FIXED_GEPAECK_OPTIONS = ["Separat"];
 
 // ================= Hilfsfunktionen =================
 
@@ -804,7 +806,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (action === "csv-export") exportArtikelCSV();
       else if (action === "csv-import") document.getElementById("csvFileInput").click();
       else if (action === "backup-export") exportBackup();
-            else if (action === "backup-import") document.getElementById("backupFileInput").click();
+      else if (action === "backup-import") document.getElementById("backupFileInput").click();
       else if (action === "show-onboarding") document.getElementById("onboardingOverlay").classList.remove("hide-el");
     }
   });
@@ -836,7 +838,6 @@ document.addEventListener("DOMContentLoaded", function () {
   if (istErsterStart) {
     document.getElementById("onboardingOverlay").classList.remove("hide-el");
   }
-});
 });
 
 // ================= ARTIKEL: Liste, Formular =================
@@ -1048,7 +1049,7 @@ function renderPacklistenTab() {
                 '<div class="list-row-title">' + escapeHtml(p.name) + '</div>' +
                 '<div class="list-row-sub">' + escapeHtml(p.urlaubstypen.join(", ")) + ' · ' + p.items.length + ' Artikel</div>' +
               '</div>' +
-              '<button class="row-more-btn" data-more="' + p.id + '">•- •</button>' +
+              '<button class="row-more-btn" data-more="' + p.id + '">•••</button>' +
             '</div>';
   });
   html += '</div>';
@@ -1497,7 +1498,7 @@ function renderPackenScreen() {
       });
     });
 
-   } else if (packenSortMode === "gepaeckstueck") {
+  } else if (packenSortMode === "gepaeckstueck") {
     const orderedGep = [];
     const bekannt = {};
     p.items.forEach(function (it) {
@@ -1763,6 +1764,7 @@ function renderAuswertungScreen() {
 
   document.getElementById("auswertungContainer").innerHTML = html;
 }
+
 // ================= KONFIGURATION =================
 
 const konfigMeta = {
