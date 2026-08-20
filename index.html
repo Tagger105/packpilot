@@ -1697,9 +1697,10 @@ function renderAuswertungScreen() {
       return a && a.istGepaeckstueck && a.name === bagName;
     });
     if (!item) return false;
-    return !item.gepaeckstueck;
+    if (!item.gepaeckstueck) return true;
+    return FIXED_GEPAECK_OPTIONS.indexOf(item.gepaeckstueck) > -1;
   }
-
+  
   const bagNamesUsed = {};
   p.items.forEach(function (it) {
     const a = artikelObj(it.artikelId);
