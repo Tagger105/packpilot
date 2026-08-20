@@ -166,6 +166,15 @@ body { display: flex; align-items: center; justify-content: center; }
 
 .config-add-row { display: flex; gap: 8px; align-items: center; }
 .config-add-row input { flex: 1; }
+  .onboarding-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 90; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.onboarding-overlay.hide-el { display: none; }
+.onboarding-card { background: var(--color-card); border-radius: 18px; padding: 24px 20px; max-height: 85%; overflow-y: auto; }
+.onboarding-icon { font-size: 40px; text-align: center; margin-bottom: 8px; }
+.onboarding-title { font-size: 20px; font-weight: 700; color: var(--color-text); text-align: center; margin-bottom: 6px; }
+.onboarding-text { font-size: 14px; color: var(--color-text-secondary); text-align: center; margin-bottom: 16px; }
+.onboarding-steps { display: flex; flex-direction: column; gap: 14px; margin-bottom: 8px; }
+.onboarding-step { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; color: var(--color-text); line-height: 1.4; }
+.onboarding-step-num { background: var(--color-accent); color: #fff; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -232,6 +241,11 @@ body { display: flex; align-items: center; justify-content: center; }
       <div class="grouped-list">
         <div class="list-row" data-settings-action="backup-export"><div class="list-row-title">Backup erstellen</div><div class="chevron">›</div></div>
         <div class="list-row" data-settings-action="backup-import"><div class="list-row-title">Backup wiederherstellen</div><div class="chevron">›</div></div>
+      </div>
+
+      <div class="section-header">Hilfe</div>
+      <div class="grouped-list">
+        <div class="list-row" data-settings-action="show-onboarding"><div class="list-row-title">Anleitung anzeigen</div><div class="chevron">›</div></div>
       </div>
     </section>
 
@@ -391,7 +405,21 @@ body { display: flex; align-items: center; justify-content: center; }
     </div>
 
   </div>
-
+ <div class="onboarding-overlay hide-el" id="onboardingOverlay">
+    <div class="onboarding-card">
+      <div class="onboarding-icon">🧳</div>
+      <div class="onboarding-title">Willkommen bei PackPilot!</div>
+      <div class="onboarding-text">So kommst du am schnellsten los:</div>
+      <div class="onboarding-steps">
+        <div class="onboarding-step"><span class="onboarding-step-num">1</span><span>Lege deine <b>Gepäckstücke</b> an (Tab "Artikel" → "+" → "🧳 Ist ein Gepäckstück" aktivieren) und trage ihr Leergewicht ein.</span></div>
+        <div class="onboarding-step"><span class="onboarding-step-num">2</span><span>Lege deine <b>Artikel</b> an (Kleidung, Equipment, ...) mit Gewicht, Lagerort und passenden Urlaubstypen.</span></div>
+        <div class="onboarding-step"><span class="onboarding-step-num">3</span><span>Erstelle eine <b>neue Packliste</b>, wähle Urlaubstyp(en) und die passenden Artikel aus.</span></div>
+        <div class="onboarding-step"><span class="onboarding-step-num">4</span><span>Weise jedem Artikel ein <b>Gepäckstück</b> zu und starte "Packen" - dort siehst du Fortschritt und Gewicht live.</span></div>
+      </div>
+      <button class="btn-primary" id="onboardingCloseBtn" style="width:100%;margin-top:8px;">Los geht's</button>
+    </div>
+  </div>
+  
 </div>
 <script>
 // ================= Datenmodell (persistiert in localStorage) =================
@@ -402,14 +430,10 @@ const state = {
   kategorien: ["Kleidung", "Sonderkleidung", "Equipment", "Bad und Hygieneartikel", "Sonstiges", "Medizin", "Verpflegung", "Transport"],
   urlaubstypen: ["Standard Sommer", "Standard Winter", "Wandern", "Hochtour/Klettern", "Meer", "Ski Fahren", "Camping", "Business", "Party", "Fahrrad", "Joggen/Sport"],
   lagerorte: ["Kleiderschrank", "Bad", "Keller", "Büro"],
-  gepaeckstuecke: ["Koffer 1", "Koffer 2", "Handgepäckkoffer", "Rucksack 36l", "Rucksack 25l", "Am Mann", "Sonstiges", "Separat"],
-  artikel: [
-    { id: 1, name: "Socken", kategorie: "Kleidung", gewicht: 20, lagerort: "Kleiderschrank", standardmenge: 5, urlaubstypen: ["Standard Sommer", "Standard Winter", "Wandern", "Meer", "Ski Fahren", "Camping"], kommentar: "", status: "Aktiv", istGepaeckstueck: false },
-    { id: 2, name: "T-Shirt", kategorie: "Kleidung", gewicht: 150, lagerort: "Kleiderschrank", standardmenge: 4, urlaubstypen: ["Standard Sommer", "Meer", "Camping"], kommentar: "", status: "Aktiv", istGepaeckstueck: false },
-    { id: 3, name: "Ladekabel", kategorie: "Equipment", gewicht: 50, lagerort: "Büro", standardmenge: 1, urlaubstypen: ["Standard Sommer", "Standard Winter", "Wandern", "Meer", "Ski Fahren", "Camping", "Business"], kommentar: "", status: "Aktiv", istGepaeckstueck: false }
-  ],
+  gepaeckstuecke: [],
+  artikel: [],
   packlisten: [],
-  nextArtikelId: 4,
+  nextArtikelId: 1,
   nextPacklisteId: 1
 };
 
@@ -463,6 +487,7 @@ let currentPackenListeId = null;
 let currentKonfigType = null;
 let screenStack = [];
 let packenSortMode = "lagerort";
+  const FIXED_GEPAECK_OPTIONS = ["Separat"];
 
 // ================= Hilfsfunktionen =================
 
@@ -667,6 +692,7 @@ const actionsByTab = {
 
 document.addEventListener("DOMContentLoaded", function () {
   generateAppIcon();
+  const istErsterStart = (localStorage.getItem(STORAGE_KEY) === null);
   loadState();
   migriereGepaeckstuecke();
 
@@ -778,7 +804,8 @@ document.addEventListener("DOMContentLoaded", function () {
       if (action === "csv-export") exportArtikelCSV();
       else if (action === "csv-import") document.getElementById("csvFileInput").click();
       else if (action === "backup-export") exportBackup();
-      else if (action === "backup-import") document.getElementById("backupFileInput").click();
+            else if (action === "backup-import") document.getElementById("backupFileInput").click();
+      else if (action === "show-onboarding") document.getElementById("onboardingOverlay").classList.remove("hide-el");
     }
   });
   document.getElementById("konfigBackBtn").addEventListener("click", function () { popScreen(); });
@@ -801,6 +828,15 @@ document.addEventListener("DOMContentLoaded", function () {
   renderPacklistenTab();
   renderStartTab();
   renderEinstellungenCounts();
+
+  document.getElementById("onboardingCloseBtn").addEventListener("click", function () {
+    document.getElementById("onboardingOverlay").classList.add("hide-el");
+  });
+
+  if (istErsterStart) {
+    document.getElementById("onboardingOverlay").classList.remove("hide-el");
+  }
+});
 });
 
 // ================= ARTIKEL: Liste, Formular =================
@@ -1185,12 +1221,13 @@ function commitDraftChange() {
 }
 
 function getBagOptionsForDraft(excludeArtikelId) {
-  return draft.rows.filter(function (r) {
+  const dynamisch = draft.rows.filter(function (r) {
     if (!r.selected) return false;
     if (r.artikelId === excludeArtikelId) return false;
     const a = artikelObj(r.artikelId);
     return a && a.istGepaeckstueck;
   }).map(function (r) { return artikelObj(r.artikelId).name; });
+  return dynamisch.concat(FIXED_GEPAECK_OPTIONS);
 }
 
 function renderBearbeitenScreen() {
@@ -1413,7 +1450,7 @@ function getBagOptionsForPackliste(p, excludeArtikelId) {
     const a = artikelObj(it.artikelId);
     if (a && a.istGepaeckstueck && it.artikelId !== excludeArtikelId) namen[a.name] = true;
   });
-  return Object.keys(namen).sort();
+  return Object.keys(namen).sort().concat(FIXED_GEPAECK_OPTIONS);
 }
 
 function renderPackenScreen() {
@@ -1460,14 +1497,14 @@ function renderPackenScreen() {
       });
     });
 
-  } else if (packenSortMode === "gepaeckstueck") {
-    const orderedGep = state.gepaeckstuecke.slice();
+   } else if (packenSortMode === "gepaeckstueck") {
+    const orderedGep = [];
     const bekannt = {};
-    orderedGep.forEach(function (g) { bekannt[g] = true; });
     p.items.forEach(function (it) {
       const g = it.gepaeckstueck || "(ohne Gepäckstück)";
       if (!bekannt[g]) { orderedGep.push(g); bekannt[g] = true; }
     });
+    orderedGep.sort();
 
     orderedGep.forEach(function (gep) {
       const itemsGep = p.items.filter(function (it) { return (it.gepaeckstueck || "(ohne Gepäckstück)") === gep; });
@@ -1670,13 +1707,16 @@ function renderAuswertungScreen() {
 
   const topLevelBags = Object.keys(bagNamesUsed).filter(istTopLevelBag);
 
-  const hatOhneGepaeck = p.items.some(function (it) {
+  const sonderGruppen = {};
+  p.items.forEach(function (it) {
     const a = artikelObj(it.artikelId);
-    return !(a && a.istGepaeckstueck) && !it.gepaeckstueck;
+    if (a && a.istGepaeckstueck) return;
+    const loc = it.gepaeckstueck || "";
+    if (loc === "") { sonderGruppen["(ohne Gepäckstück)"] = true; return; }
+    if (!bagNamesUsed[loc]) { sonderGruppen[loc] = true; }
   });
 
-  const gruppen = topLevelBags.slice();
-  if (hatOhneGepaeck) gruppen.push("(ohne Gepäckstück)");
+  const gruppen = topLevelBags.concat(Object.keys(sonderGruppen));
 
   let html = '<div class="grouped-list" style="background:none;">';
   let totalG = 0, totalP = 0;
@@ -1686,24 +1726,26 @@ function renderAuswertungScreen() {
   }
 
   gruppen.sort().forEach(function (g) {
-    let geplant, gepackt;
-    if (g === "(ohne Gepäckstück)") {
+    let geplant, gepackt, label;
+    if (!bagNamesUsed[g]) {
       geplant = 0; gepackt = 0;
       p.items.forEach(function (it) {
         const a = artikelObj(it.artikelId);
-        if (!(a && a.istGepaeckstueck) && !it.gepaeckstueck) {
+        const loc = it.gepaeckstueck || "(ohne Gepäckstück)";
+        if (!(a && a.istGepaeckstueck) && loc === g) {
           geplant += it.anzahl * artikelGewicht(it.artikelId);
           gepackt += it.anzahlGepackt * artikelGewicht(it.artikelId);
         }
       });
+      label = g;
     } else {
       geplant = ownWeight(g, "geplant") + inhaltsGewicht(g, "geplant");
       gepackt = ownWeight(g, "gepackt") + inhaltsGewicht(g, "gepackt");
+      label = "🧳 " + g;
     }
 
     totalG += geplant; totalP += gepackt;
     const pct = geplant > 0 ? Math.min(100, Math.round((gepackt / geplant) * 100)) : 0;
-    const label = (g === "(ohne Gepäckstück)") ? g : ("🧳 " + g);
     html += '<div class="list-card" style="cursor:default;">' +
               '<div class="list-card-title">' + escapeHtml(label) + '</div>' +
               '<div class="list-card-sub">' + formatKg(gepackt) + ' kg / ' + formatKg(geplant) + ' kg</div>' +
@@ -1721,7 +1763,6 @@ function renderAuswertungScreen() {
 
   document.getElementById("auswertungContainer").innerHTML = html;
 }
-
 // ================= KONFIGURATION =================
 
 const konfigMeta = {
